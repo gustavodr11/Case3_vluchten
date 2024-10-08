@@ -61,7 +61,10 @@ if selected == "Vluchten":
 
   # Creëer een colormap op basis van hoogte (gebaseerd op de gevraagde kleuren)
   colormap = cm.LinearColormap(colors=['yellow', 'green', 'turquoise', 'blue', 'purple'], 
-                               vmin=df1['[3d Altitude Ft]'].min(), vmax=df1['[3d Altitude Ft]'].max())
+                               index=[0, 10000, 20000, 30000, 40000],
+                               vmin=df1['[3d Altitude Ft]'].min(), 
+                               vmax=df1['[3d Altitude Ft]'].max(),
+                               caption='Hoogte in ft.')
 
   # Voeg de lijn toe, waarbij de kleur afhangt van de hoogte
   for i in range(1, len(coordinates)):
