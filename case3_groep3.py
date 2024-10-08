@@ -17,6 +17,12 @@ if selected == 'Intro':
     st.write("""
         Tekst
     """)
+
+
+
+
+
+  
     # Bronnen
     st.write("### Gebruikte Bronnen:")
     st.write("""
