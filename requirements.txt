@@ -4,4 +4,3 @@ pandas
 numpy
 streamlit-option-menu
 folium
-branca.colormap
