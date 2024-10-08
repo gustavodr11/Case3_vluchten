@@ -8,7 +8,6 @@ with st.sidebar:
   selected = option_menu(menu_title="Menu", options=["Intro", "Vluchten", "Luchthavens"], icons=["play", "airplane", "bezier"], menu_icon="list")
 
 
-# Intropagina
 # Intro pagina
 if selected == 'Intro':
     st.title("Case 3 Vluchten - Groep 3")
@@ -17,11 +16,6 @@ if selected == 'Intro':
     st.write("""
         Tekst
     """)
-
-
-
-
-
   
     # Bronnen
     st.write("### Gebruikte Bronnen:")
@@ -29,4 +23,9 @@ if selected == 'Intro':
         - [Youtube filmpje](https://www.youtube.com/watch?v=hEPoto5xp3k)
         - [Streamlit documentatie](https://docs.streamlit.io/)
     """)
+
+# Vluchten pagina
+if selected == "Vluchten": 
+  st.title("Zeven verschillende vluchten") 
+  
 
