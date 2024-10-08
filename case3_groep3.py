@@ -98,7 +98,7 @@ if selected == "Vluchten":
   colormap.add_to(m)
 
   # Weergave van de kaart in Streamlit
-  st_folium(m, width=700, height=800)
+  st_folium(m, width=700, height=600)
 
   
 
