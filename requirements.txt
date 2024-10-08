@@ -5,3 +5,4 @@ numpy
 streamlit-option-menu
 folium
 streamlit_folium
+openpyxl
