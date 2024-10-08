@@ -10,7 +10,7 @@ with st.sidebar:
 
 # Intropagina
 # Intro pagina
-if menu == 'Intro':
+if selected == 'Intro':
     st.title("Case 3 Vluchten - Groep 3")
 
     # Korte uitleg
