@@ -57,7 +57,7 @@ if selected == "Vluchten":
   mid_lon = df1['[3d Longitude]'].mean()
 
   # Creëer een Folium-kaart gecentreerd op het midden van de vlucht
-  m = folium.Map(location=[mid_lat, mid_lon], zoom_start=6, tiles='CartoDB positron')
+  m = folium.Map(location=[mid_lat, mid_lon], zoom_start=5, tiles='CartoDB positron')
 
   # Creëer een colormap op basis van hoogte (gebaseerd op de gevraagde kleuren)
   colormap = cm.LinearColormap(colors=['yellow', 'green', 'turquoise', 'blue', 'purple'], 
