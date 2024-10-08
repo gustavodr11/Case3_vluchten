@@ -26,6 +26,6 @@ if selected == 'Intro':
 
 # Vluchten pagina
 if selected == "Vluchten": 
-  st.title("Zeven vluchten (AMS - BCN)") 
+  st.title("7 Vluchten (AMS - BCN)") 
   
 
