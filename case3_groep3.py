@@ -182,7 +182,7 @@ if selected == 'Luchthavens':
 
 # Toon de grafiek
   fig.show()
-    st.subheader("Luchthavens zijn optijd?")
+  st.subheader("Luchthavens zijn optijd?")
   
 # Groeperen per luchthaven en status
   grouped = df.groupby(['City', 'status'])['vluchten'].sum().unstack(fill_value=0)
