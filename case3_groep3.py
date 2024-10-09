@@ -4,6 +4,7 @@ import pandas as pd
 import folium
 import branca.colormap as cm
 from streamlit_folium import st_folium
+import plotly.express as px
 
 st.set_page_config(page_title='Case 3 Vluchten (groep 3)', page_icon='✈️')
 
