@@ -152,7 +152,7 @@ if selected == 'Luchthavens':
   st.subheader("Top 20 luchthavens") 
   df = ("DatasetLuchthaven_murged2.csv")
   # Tellen van de meest voorkomende luchthavens
-  luchthaven_frequentie = df['luchthaven'].value_counts().nlargest(20).reset_index()
+  luchthaven_frequentie = df['Luchthaven'].value_counts().nlargest(20).reset_index()
 
 # Hernoem de kolommen voor duidelijkheid
   luchthaven_frequentie.columns = ['Luchthaven', 'Aantal_vluchten']
