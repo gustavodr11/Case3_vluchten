@@ -155,10 +155,10 @@ if selected == 'Luchthavens':
   luchthaven_frequentie = df['Luchthaven'].value_counts().nlargest(20).reset_index()
 
 # Hernoem de kolommen voor duidelijkheid
-  luchthaven_frequentie.columns = ['Luchthaven', 'Aantal_vluchten']
+  luchthaven_frequentie.columns = ['ICAO', 'Aantal_vluchten']
 
 # Maak een interactieve bar plot met plotly express
-  fig = px.bar(luchthaven_frequentie, x='Luchthaven', y='Aantal_vluchten', 
+  fig = px.bar(luchthaven_frequentie, x='ICAO', y='Aantal_vluchten', 
              title='Top 20 Meest Voorkomende Luchthavens',
              labels={'Aantal_vluchten': 'Aantal vluchten'},
              color='Aantal_vluchten', color_continuous_scale='Blues')
