@@ -152,9 +152,6 @@ if selected == 'Luchthavens':
   st.subheader("Top 20 luchthavens") 
   df = ("DatasetLuchthaven_murged2.csv")
 
-
-  df['luchthaven'] = df['ICAO']  # Zorg dat de kolom de juiste naam heeft
-
 # Tellen van de meest voorkomende luchthavens
   luchthaven_frequentie = ("luchthaven_frequentie.csv")
   luchthaven_frequentie.columns = ['luchthaven', 'aantal_vluchten']
