@@ -146,5 +146,7 @@ if selected == "Vluchten":
   st.plotly_chart(fig)
 
 
-  
+# Vluchten pagina
+if selected == 'Vluchten':
+    st.title("Top 20 Luchthavens")  
 
