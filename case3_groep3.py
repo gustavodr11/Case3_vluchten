@@ -154,7 +154,6 @@ if selected == 'Luchthavens':
 
 # Tellen van de meest voorkomende luchthavens
   luchthaven_frequentie = ("luchthaven_frequentie.csv")
-  luchthaven_frequentie.columns = ['luchthaven', 'aantal_vluchten']
 
 # Maak een bar plot van de 20 meest voorkomende luchthavens met Plotly
   fig = px.bar(
