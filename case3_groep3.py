@@ -180,7 +180,7 @@ if selected == 'Luchthavens':
 # Maak een gestapelde bar plot met plotly express
   fig = px.bar(grouped_percentage_reset, x='City', y='percentage', color='status',
              title='Percentage vluchten die te laat, op tijd of te vroeg zijn per luchthaven',
-             labels={'percentage': 'Percentage (%)', 'City': 'Luchthaven'},
+             labels={'percentage': 'Percentage (%)', 'City': 'ICAO'},
              color_discrete_map={'Te laat': 'red', 'Op tijd': 'green', 'Te vroeg': 'blue'})
 
 # Pas de lay-out van de grafiek aan
@@ -212,7 +212,7 @@ if selected == 'Luchthavens':
       x='City', 
       y='verschil_minuten', 
       title='Gemiddelde vertraging van vluchten per luchthaven in 2019 (in minuten)', 
-      labels={'City': 'Luchthaven', 'verschil_minuten': 'Gemiddelde vertraging (minuten)'},
+      labels={'City': 'ICAO', 'verschil_minuten': 'Gemiddelde vertraging (minuten)'},
       color='verschil_minuten',
       text='aantal_vluchten',  # Aantal vluchten als tekstlabel
       color_continuous_scale=px.colors.sequential.Viridis
