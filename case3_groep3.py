@@ -151,16 +151,12 @@ if selected == 'Luchthavens':
   st.title("Luchthavens") 
   st.subheader("Top 20 luchthavens") 
   df = ("DatasetLuchthaven_murged2.csv")
-  # Tellen van de meest voorkomende luchthavens
-  luchthaven_frequentie = df['ICAO'].value_counts().nlargest(20).reset_index()
 
-# Hernoem de kolommen voor duidelijkheid
-  luchthaven_frequentie.columns = ['ICAO', 'Aantal_vluchten']
 
   df['luchthaven'] = df['Org/Des']  # Zorg dat de kolom de juiste naam heeft
 
 # Tellen van de meest voorkomende luchthavens
-  luchthaven_frequentie = df['luchthaven'].value_counts().nlargest(20).reset_index()
+  luchthaven_frequentie = ("luchthaven_frequentie.csv")
   luchthaven_frequentie.columns = ['luchthaven', 'aantal_vluchten']
 
 # Maak een bar plot van de 20 meest voorkomende luchthavens met Plotly
