@@ -153,7 +153,7 @@ if selected == 'Luchthavens':
   df = ("DatasetLuchthaven_murged2.csv")
 
 
-  df['luchthaven'] = df['Org/Des']  # Zorg dat de kolom de juiste naam heeft
+  df['luchthaven'] = df['ICAO']  # Zorg dat de kolom de juiste naam heeft
 
 # Tellen van de meest voorkomende luchthavens
   luchthaven_frequentie = ("luchthaven_frequentie.csv")
