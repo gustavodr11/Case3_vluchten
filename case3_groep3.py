@@ -152,20 +152,37 @@ if selected == 'Luchthavens':
   st.subheader("Top 20 luchthavens") 
   df = ("DatasetLuchthaven_murged2.csv")
   # Tellen van de meest voorkomende luchthavens
-  luchthaven_frequentie = df['ICAO'].value_counts().nlargest(20).reset_index()
+    luchthaven_frequentie = df['ICAO'].value_counts().nlargest(20).reset_index()
 
 # Hernoem de kolommen voor duidelijkheid
-  luchthaven_frequentie.columns = ['ICAO', 'Aantal_vluchten']
+    luchthaven_frequentie.columns = ['ICAO', 'Aantal_vluchten']
 
-# Maak een interactieve bar plot met plotly express
-  fig = px.bar(luchthaven_frequentie, x='ICAO', y='Aantal_vluchten', 
-             title='Top 20 Meest Voorkomende Luchthavens',
-             labels={'Aantal_vluchten': 'Aantal vluchten'},
-             color='Aantal_vluchten', color_continuous_scale='Blues')
+    df['luchthaven'] = df['Org/Des']  # Zorg dat de kolom de juiste naam heeft
 
-# Toon de plot in Streamlit
-  st.plotly_chart(fig)
-  st.subheader("Luchthavens zijn optijd?")
+# Tellen van de meest voorkomende luchthavens
+    luchthaven_frequentie = df['luchthaven'].value_counts().nlargest(20).reset_index()
+    luchthaven_frequentie.columns = ['luchthaven', 'aantal_vluchten']
+
+# Maak een bar plot van de 20 meest voorkomende luchthavens met Plotly
+  fig = px.bar(
+      luchthaven_frequentie,
+      x='luchthaven',
+      y='aantal_vluchten',
+      title='Top 20 Meest Voorkomende Luchthavens',
+      labels={'luchthaven': 'Luchthaven', 'aantal_vluchten': 'Aantal Vluchten'},
+      color_discrete_sequence=['blue']  # Maak alle bars blauw
+  )
+
+# Pas de layout aan voor betere weergave
+  fig.update_layout(
+      xaxis_title='Luchthaven',
+      yaxis_title='Aantal Vluchten',
+      xaxis_tickangle=-45,
+  )
+
+# Toon de grafiek
+  fig.show()
+    st.subheader("Luchthavens zijn optijd?")
   
 # Groeperen per luchthaven en status
   grouped = df.groupby(['City', 'status'])['vluchten'].sum().unstack(fill_value=0)
