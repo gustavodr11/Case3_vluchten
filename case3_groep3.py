@@ -103,5 +103,28 @@ if selected == "Vluchten":
   # Weergave van de kaart in Streamlit
   st_folium(m, width=700, height=600)
 
+
+  # Voeg 'ALL' toe aan de opties voor het dropdownmenu
+  selected_vlucht = st.selectbox("Selecteer een vlucht", options=['ALL'] + [f'vlucht {i}' for i in range(1, 8)])
+
+  # Als 'ALL' is geselecteerd, combineer de data van alle vluchten
+  if selected_vlucht == 'ALL':
+      df1 = pd.concat(vluchten_data.values(), ignore_index=True)
+  else:
+      df1 = vluchten_data[selected_vlucht]
+
+  # Tijd omzetten van seconden naar uren
+  df1['Time (hours)'] = df1['Time (secs)'] / 3600
+
+  # Maak de lijnplot met Plotly Express
+  fig = px.line(df1, x='Time (hours)', y='[3d Altitude Ft]', 
+                title='Hoogte vs Tijd',  
+                labels={"Time (hours)": "Tijd (uren)", "[3d Altitude Ft]": "Hoogte (ft)"},
+                color_discrete_sequence=['green']  
+               )
+
+  # Toon de grafiek in Streamlit
+  st.plotly_chart(fig)
+
   
 
