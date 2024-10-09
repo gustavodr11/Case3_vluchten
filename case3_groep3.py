@@ -105,26 +105,43 @@ if selected == "Vluchten":
   st_folium(m, width=700, height=600)
 
 
+
   # Voeg 'ALL' toe aan de opties voor het dropdownmenu
   selected_vlucht = st.selectbox("Selecteer een vlucht", options=['ALL'] + [f'vlucht {i}' for i in range(1, 8)])
 
-  # Als 'ALL' is geselecteerd, combineer de data van alle vluchten
+  # Als 'ALL' is geselecteerd, combineer de data van alle vluchten en voeg een kolom toe om de vlucht te labelen
   if selected_vlucht == 'ALL':
-      df1 = pd.concat(vluchten_data.values(), ignore_index=True)
+      df_all = pd.concat([df.assign(vlucht=vlucht) for vlucht, df in vluchten_data.items()], ignore_index=True)
+      df1 = df_all
   else:
       df1 = vluchten_data[selected_vlucht]
+      df1['vlucht'] = selected_vlucht  # Voeg een kolom toe om de vlucht te labelen
 
   # Tijd omzetten van seconden naar uren
   df1['Time (hours)'] = df1['Time (secs)'] / 3600
 
-  # Maak de lijnplot met Plotly Express
+  # Specifieke kleuren toewijzen aan elke vlucht
+  kleuren_map = {
+      'vlucht 1': 'red',
+      'vlucht 2': 'green',
+      'vlucht 3': 'blue',
+      'vlucht 4': 'orange',
+      'vlucht 5': 'purple',
+      'vlucht 6': 'brown',
+      'vlucht 7': 'pink'
+  }
+
+  # Maak de lijnplot met verschillende kleuren per vlucht
   fig = px.line(df1, x='Time (hours)', y='[3d Altitude Ft]', 
                 title='Hoogte vs Tijd',  
-                labels={"Time (hours)": "Tijd (uren)", "[3d Altitude Ft]": "Hoogte (ft)"} 
+                labels={"Time (hours)": "Tijd (uren)", "[3d Altitude Ft]": "Hoogte (ft)"},
+                color='vlucht',  # Voeg kleur toe per vlucht
+                color_discrete_map=kleuren_map  # Gebruik de aangepaste kleurenmap
                )
 
   # Toon de grafiek in Streamlit
   st.plotly_chart(fig)
+
 
   
 
