@@ -145,8 +145,251 @@ if selected == "Vluchten":
   # Toon de grafiek in Streamlit
   st.plotly_chart(fig)
 
-
+# --------------------------------------------------------------------------
 # Vluchten pagina
 if selected == 'Luchthavens':
-    st.title("Top 20 Luchthavens")  
+  st.title("Luchthavens") 
+  st.supheader("Top 20 luchthavens") 
+  df = (DatasetLuchthaven_murged2.csv)
+  # Tellen van de meest voorkomende luchthavens
+  luchthaven_frequentie = df['luchthaven'].value_counts().nlargest(20).reset_index()
+
+# Hernoem de kolommen voor duidelijkheid
+  luchthaven_frequentie.columns = ['Luchthaven', 'Aantal_vluchten']
+
+# Maak een interactieve bar plot met plotly express
+  fig = px.bar(luchthaven_frequentie, x='Luchthaven', y='Aantal_vluchten', 
+             title='Top 20 Meest Voorkomende Luchthavens',
+             labels={'Aantal_vluchten': 'Aantal vluchten'},
+             color='Aantal_vluchten', color_continuous_scale='Blues')
+
+# Toon de plot in Streamlit
+  st.plotly_chart(fig)
+  st.supheader(Luchthavens zijn optijd?)
+  
+# Groeperen per luchthaven en status
+  grouped = df.groupby(['City', 'status'])['vluchten'].sum().unstack(fill_value=0)
+
+# Berekenen van het percentage per luchthaven
+  grouped_percentage = grouped.div(grouped.sum(axis=1), axis=0) * 100
+
+# Voor plotly moeten we het DataFrame omzetten naar een lang formaat
+  grouped_percentage_reset = grouped_percentage.reset_index().melt(id_vars='City', value_vars=['Te laat', 'Op tijd', 'Te vroeg'],
+                                                                 var_name='status', value_name='percentage')
+
+# Maak een gestapelde bar plot met plotly express
+  fig = px.bar(grouped_percentage_reset, x='City', y='percentage', color='status',
+             title='Percentage vluchten die te laat, op tijd of te vroeg zijn per luchthaven',
+             labels={'percentage': 'Percentage (%)', 'City': 'Luchthaven'},
+             color_discrete_map={'Te laat': 'red', 'Op tijd': 'green', 'Te vroeg': 'blue'})
+
+# Pas de lay-out van de grafiek aan
+  fig.update_layout(barmode='stack', xaxis={'categoryorder':'total descending'})
+
+# Toon de plot in Streamlit
+  st.plotly_chart(fig)
+  
+  # Gemiddelde vertraging per luchthaven en jaar berekenen
+  gemiddelde_vertraging = merged_df.groupby(['City', 'Jaartal'])['verschil_minuten'].mean().reset_index()
+
+# Aantal vluchten per luchthaven en jaar tellen
+  aantal_vluchten = df.groupby(['City', 'Jaartal']).size().reset_index(name='aantal_vluchten')
+
+# De resultaten samenvoegen
+  gemiddelde_vertraging = gemiddelde_vertraging.merge(aantal_vluchten, on=['City', 'Jaartal'])
+
+# Split de data op basis van jaartal
+  df_2019 = gemiddelde_vertraging[gemiddelde_vertraging['Jaartal'] == 2019]
+  df_2020 = gemiddelde_vertraging[gemiddelde_vertraging['Jaartal'] == 2020]
+
+# Bepaal de maximale waarde voor de y-as
+  max_vertraging = max(gemiddelde_vertraging['verschil_minuten'].max(), 0)
+  min_vertraging = min(gemiddelde_vertraging['verschil_minuten'].min(), 0)
+
+# Bar plot voor 2019
+  fig_2019 = px.bar(
+      df_2019, 
+      x='City', 
+      y='verschil_minuten', 
+      title='Gemiddelde vertraging van vluchten per luchthaven in 2019 (in minuten)', 
+      labels={'City': 'Luchthaven', 'verschil_minuten': 'Gemiddelde vertraging (minuten)'},
+      color='verschil_minuten',
+      text='aantal_vluchten',  # Aantal vluchten als tekstlabel
+      color_continuous_scale=px.colors.sequential.Viridis
+  )
+
+# Y-as instellen voor 2019
+  fig_2019.update_yaxes(range=[min_vertraging, max_vertraging])
+
+# Bar plot voor 2020
+  fig_2020 = px.bar(
+      df_2020, 
+      x='City', 
+      y='verschil_minuten', 
+      title='Gemiddelde vertraging van vluchten per luchthaven in 2020 (in minuten)', 
+      labels={'City': 'Luchthaven', 'verschil_minuten': 'Gemiddelde vertraging (minuten)'},
+      color='verschil_minuten',
+      text='aantal_vluchten',  # Aantal vluchten als tekstlabel
+      color_continuous_scale=px.colors.sequential.Viridis
+  )
+
+# Y-as instellen voor 2020
+  fig_2020.update_yaxes(range=[min_vertraging, max_vertraging])
+
+# Plotten van beide figuren in Streamlit
+  st.plotly_chart(fig_2019)
+  st.plotly_chart(fig_2020)
+  st.subheader("Drukte op luchthavens in de tijd")
+
+
+# Bereken het aantal vliegtuigen op elke luchthaven op een bepaald moment
+  def calculate_aircraft_on_airport(selected_time):
+      landed = df[(merged_df['LSV'] == 'L') & (merged_df['STD'] <= selected_time)]
+      departed = df[(merged_df['LSV'] == 'S') & (merged_df['STD'] <= selected_time)]
+    
+      landed_count = landed.groupby('luchthaven')['TAR'].nunique().reset_index(name='Aantal_vliegtuigen')
+      departed_count = departed.groupby('luchthaven')['TAR'].nunique().reset_index(name='Aantal_vertrokken')
+
+      airport_traffic = pd.merge(landed_count, departed_count, on='luchthaven', how='left').fillna(0)
+      airport_traffic['Aantal_vliegtuigen'] = airport_traffic['Aantal_vliegtuigen'] - airport_traffic['Aantal_vertrokken']
+
+      return airport_traffic
+
+# Streamlit interface
+  st.title("Vliegtuigen op luchthavens")
+  st.write("Selecteer een datum om het aantal vliegtuigen per luchthaven te zien.")
+
+# Datumkeuze
+  selected_date = st.date_input("Kies een datum:", value=pd.to_datetime('2019-07-15'))
+
+# Bereken het aantal vliegtuigen voor de geselecteerde datum
+  airport_traffic = calculate_aircraft_on_airport(selected_date)
+
+# Bar plot weergeven
+  fig = px.bar(
+      airport_traffic, 
+      x='luchthaven', 
+      y='Aantal_vliegtuigen', 
+      title=f"Aantal vliegtuigen per luchthaven op {selected_date}",
+      labels={'luchthaven': 'Luchthaven', 'Aantal_vliegtuigen': 'Aantal Vliegtuigen'},
+      color='Aantal_vliegtuigen',
+      color_continuous_scale=px.colors.sequential.Viridis
+  )
+
+  st.plotly_chart(fig)
+
+# Interactieve grafiek met een slider
+  def create_aircraft_slider_plot():
+      start_date = pd.to_datetime('2019-01-01')
+      end_date = pd.to_datetime('2020-12-31')
+      days = pd.date_range(start=start_date, end=end_date, freq='D')
+
+      frames = []
+
+      for day in days:
+          filtered_data = calculate_aircraft_on_airport(day)
+          fig = px.bar(filtered_data, x='luchthaven', y='Aantal_vliegtuigen', title=f"Aantal vliegtuigen per luchthaven op {day.date()}")
+          frames.append(go.Frame(data=fig.data, name=str(day.date())))
+
+    # Initiële figuur
+      initial_fig = calculate_aircraft_on_airport(days[0])
+      fig = px.bar(initial_fig, x='luchthaven', y='Aantal_vliegtuigen', title=f"Aantal vliegtuigen per luchthaven op {days[0].date()}")
+
+      fig = go.Figure(
+          data=fig.data,
+          layout=go.Layout(
+              sliders=[{
+                  'steps': [{
+                      'args': [[str(day.date())], {'frame': {'duration': 300, 'redraw': True}, 'mode': 'immediate'}],
+                      'label': str(day.date()),
+                      'method': 'animate'
+                  } for day in days],
+                  'currentvalue': {'prefix': 'Datum: '},
+                  'pad': {'b': 10},
+              }]
+          ),
+          frames=frames
+      )
+
+      st.plotly_chart(fig)
+
+# Aanroepen van de slider grafiek
+  if st.checkbox("Toon interactieve grafiek met slider"):
+      create_aircraft_slider_plot()
+
+  st.subheader("Hitte kaart europa")
+  df['Latitude'] = merged_df['Latitude'].astype(str).str.replace(',', '.').astype(float)
+  df['Longitude'] = merged_df['Longitude'].astype(str).str.replace(',', '.').astype(float)
+
+# Voeg een nieuwe kolom toe voor de tijdstippen van de gebeurtenissen
+  df['STD'] = pd.to_datetime(merged_df['STD'])  # Zorg dat STD als datetime is
+
+# Bereken het aantal vliegtuigen op elke luchthaven op een bepaald moment
+  def calculate_aircraft_on_airport(selected_time):
+    # Filter de data voor alle vluchten die al geland zijn, maar nog niet vertrokken op het gekozen tijdstip
+      landed = merged_df[(merged_df['LSV'] == 'L') & (merged_df['STD'] <= selected_time)]
+      departed = merged_df[(merged_df['LSV'] == 'S') & (merged_df['STD'] <= selected_time)]
+    
+    # Groepeer de vluchten per luchthaven en tel het aantal vliegtuigen dat er nog is
+      landed_count = landed.groupby('luchthaven')['TAR'].nunique().reset_index(name='Aantal_vliegtuigen')
+      departed_count = departed.groupby('luchthaven')['TAR'].nunique().reset_index(name='Aantal_vertrokken')
+
+    # Voeg de twee datasets samen en bereken het aantal vliegtuigen dat nog aanwezig is
+      airport_traffic = pd.merge(landed_count, departed_count, on='luchthaven', how='left').fillna(0)
+      airport_traffic['Aantal_vliegtuigen'] = airport_traffic['Aantal_vliegtuigen'] - airport_traffic['Aantal_vertrokken']
+
+    # Voeg de coördinaten van de luchthavens toe
+      airports = merged_df[['luchthaven', 'Latitude', 'Longitude']].drop_duplicates()
+      airport_traffic = airport_traffic.merge(airports, on='luchthaven')
+
+      return airport_traffic
+
+# Maak een functie om de kaart te genereren, inclusief een heatmap
+  def create_aircraft_traffic_map(selected_time):
+    # Bereken het aantal vliegtuigen op de luchthavens op de geselecteerde tijd
+      airport_traffic = calculate_aircraft_on_airport(selected_time)
+
+    # Maak de kaart met een centraal punt in Europa
+      traffic_map = folium.Map(location=[50, 10], zoom_start=4)
+
+    # Voeg markers toe aan de kaart voor elke luchthaven
+      for idx, row in airport_traffic.iterrows():
+        # Bepaal de grootte van de marker op basis van het aantal vliegtuigen
+          folium.CircleMarker(
+              location=[row['Latitude'], row['Longitude']],
+              radius=row['Aantal_vliegtuigen'] / 10,  # Maak de marker afhankelijk van het aantal vliegtuigen
+              color='red',  # Rode markers voor het aantal vliegtuigen op de luchthaven
+              fill=True,
+              fill_opacity=0.6,
+              tooltip=f"Luchthaven: {row['luchthaven']}, Aantal vliegtuigen: {row['Aantal_vliegtuigen']}"
+          ).add_to(traffic_map)
+
+    # Voeg heatmap toe gebaseerd op het aantal vliegtuigen op elke luchthaven
+      heat_data = [[row['Latitude'], row['Longitude'], row['Aantal_vliegtuigen']] for idx, row in airport_traffic.iterrows()]
+      HeatMap(heat_data, radius=15, blur=10, max_zoom=1).add_to(traffic_map)
+
+      return traffic_map
+
+# Streamlit-app
+  def main():
+      st.title("Interactieve Luchtvaartkaart")
+
+    # Datumselector
+      start_date = pd.to_datetime('2019-01-01')
+      end_date = pd.to_datetime('2020-12-31')
+      selected_day = st.date_input("Selecteer een datum", value=start_date)
+
+    # Controleer of de geselecteerde datum binnen het bereik ligt
+      if start_date <= pd.Timestamp(selected_day) <= end_date:
+        # Genereer de kaart voor de geselecteerde datum en tijd
+          selected_date_time = pd.Timestamp(selected_day)
+          traffic_map = create_aircraft_traffic_map(selected_date_time)
+        
+        # Toon de kaart met st_folium
+          st.subheader(f"Luchtvaartverkeer op {selected_day}")
+          st_folium(traffic_map)  # Gebruik st_folium in plaats van folium_static
+      else:
+          st.warning("Selecteer een datum tussen 2019-01-01 en 2020-12-31.")
+    
+  
 
