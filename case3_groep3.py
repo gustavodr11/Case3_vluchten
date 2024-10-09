@@ -147,6 +147,6 @@ if selected == "Vluchten":
 
 
 # Vluchten pagina
-if selected == 'Vluchten':
+if selected == 'Luchthavens':
     st.title("Top 20 Luchthavens")  
 
