@@ -120,8 +120,7 @@ if selected == "Vluchten":
   # Maak de lijnplot met Plotly Express
   fig = px.line(df1, x='Time (hours)', y='[3d Altitude Ft]', 
                 title='Hoogte vs Tijd',  
-                labels={"Time (hours)": "Tijd (uren)", "[3d Altitude Ft]": "Hoogte (ft)"},
-                color_discrete_sequence=['green']  
+                labels={"Time (hours)": "Tijd (uren)", "[3d Altitude Ft]": "Hoogte (ft)"} 
                )
 
   # Toon de grafiek in Streamlit
