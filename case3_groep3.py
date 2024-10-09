@@ -12,6 +12,7 @@ st.set_page_config(page_title='Case 3 Vluchten (groep 3)', page_icon='✈️')
 with st.sidebar: 
   selected = option_menu(menu_title="Menu", options=["Intro", "Vluchten", "Luchthavens"], icons=["play", "airplane", "bezier"], menu_icon="list")
 
+# --------------------------------------------------------------------------
 
 # Intro pagina
 if selected == 'Intro':
@@ -28,6 +29,8 @@ if selected == 'Intro':
         - [Youtube filmpje](https://www.youtube.com/watch?v=hEPoto5xp3k)
         - [Streamlit documentatie](https://docs.streamlit.io/)
     """)
+
+# --------------------------------------------------------------------------
 
 # Vluchten pagina
 if selected == "Vluchten": 
@@ -104,7 +107,7 @@ if selected == "Vluchten":
   # Weergave van de kaart in Streamlit
   st_folium(m, width=700, height=600)
 
-
+  # --------------------------------------
 
   # Voeg 'ALL' toe aan de opties voor het dropdownmenu
   selected_vlucht = st.selectbox("Selecteer een vlucht", options=['ALL'] + [f'vlucht {i}' for i in range(1, 8)])
@@ -135,8 +138,8 @@ if selected == "Vluchten":
   fig = px.line(df1, x='Time (hours)', y='[3d Altitude Ft]', 
                 title='Hoogte vs Tijd',  
                 labels={"Time (hours)": "Tijd (uren)", "[3d Altitude Ft]": "Hoogte (ft)"},
-                color='vlucht',  # Voeg kleur toe per vlucht
-                color_discrete_map=kleuren_map  # Gebruik de aangepaste kleurenmap
+                color='vlucht',  
+                color_discrete_map=kleuren_map  
                )
 
   # Toon de grafiek in Streamlit
