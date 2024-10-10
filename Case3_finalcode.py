@@ -25,7 +25,13 @@ if selected == 'Intro':
 
     # Korte uitleg
     st.write("""
-        Korte Uitleg 
+        Wij, Martijn, Stievy, Sophie en Gustavo, hebben voor Case 3 de vluchtdataset gekozen, omdat we deze het meest interessant vonden. 
+        We dachten ook dat we er meer mee konden doen, zoals het gebruiken van een kaart om de data te visualiseren. 
+        Bovendien heeft één van ons meer ervaring met luchtvaart dankzij een eerdere opleiding. Dit vonden we handig, omdat het ons hielp de dataset beter te begrijpen.
+
+        In dit dashboard zullen we de 7 verschillende vluchten van Amsterdam naar Barcelona tonen op een kaart, gemaakt met Folium. Daarnaast tonen we visualisaties van de hoogte per vlucht, de afgelegde kilometers en de vluchtduur per vlucht. 
+        In het deel 'Luchthavens' presenteren we visualisaties over de meest gebruikte luchthavens, de vertragingen per luchthaven, het aantal vliegtuigen en vluchten per vliegveld. 
+        Verder is er een interactieve kaart, gemaakt met Folium, waarop het luchtverkeer verandert op basis van aangepaste data. Tot slot tonen we een voorspelling van de vertraging per jaar per maatschappij.
     """)
   
     # Bronnen
