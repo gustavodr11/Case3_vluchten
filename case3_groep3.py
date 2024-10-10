@@ -459,7 +459,7 @@ if selected == 'Luchthavens':
     # Controleer of er data beschikbaar is na de filtering
   if filtered_data.empty:
        st.write(f"Geen data beschikbaar voor {selected_airport} in {selected_year}")
-        return
+       return
 
     # Groepeer op maand en tel het aantal unieke vluchten (TAR) per maand
   flights_per_month = filtered_data.groupby(filtered_data['STD'].dt.month)['TAR'].nunique().reset_index()
