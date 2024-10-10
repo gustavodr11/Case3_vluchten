@@ -395,7 +395,7 @@ if selected == 'Luchthavens':
       return airport_traffic
 
 # Maak een functie om de kaart te genereren, inclusief een heatmap
-   def create_aircraft_traffic_map(selected_time):
+  def create_aircraft_traffic_map(selected_time):
     # Bereken het aantal vliegtuigen op de luchthavens op de geselecteerde tijd
       airport_traffic = calculate_aircraft_on_airport(selected_time)
 
