@@ -559,3 +559,71 @@ if selected == 'Luchthavens':
 
 #------------------------------------------------------------------------------------------      
 
+  from sklearn.linear_model import LinearRegression
+ 
+# Zet de 'STD' kolom om naar datetime
+  df['STD'] = pd.to_datetime(df['STD'], format='%Y-%m-%d')
+ 
+# Extraheer het jaar uit de datum
+  df['Year'] = df['STD'].dt.year
+ 
+# Bereken het gemiddelde verschil in minuten per jaar per maatschappij
+  mean_diff_per_year_maatschappij = df.groupby(['Year', 'maatschappij'])['verschil_minuten'].mean().reset_index()
+ 
+# Maak een lineair regressiemodel voor elke maatschappij
+  predictions = {}
+  for maatschappij in mean_diff_per_year_maatschappij['maatschappij'].unique():
+        subset = mean_diff_per_year_maatschappij[mean_diff_per_year_maatschappij['maatschappij'] == maatschappij]
+    # Model trainen
+        X = subset[['Year']]
+        y = subset['verschil_minuten']
+        model = LinearRegression()
+        model.fit(X, y)
+    # Maak voorspellingen voor de jaren
+        future_years = pd.DataFrame({'Year': range(subset['Year'].min(), subset['Year'].max() + 5)})
+        future_predictions = model.predict(future_years)
+    # Voeg voorspellingen toe aan de DataFrame
+        future_years['maatschappij'] = maatschappij
+        future_years['Voorspelling'] = future_predictions
+        predictions[maatschappij] = future_years
+ 
+# Combineer alle voorspellingen in één DataFrame
+  all_predictions = pd.concat(predictions.values())
+ 
+# Maak de plot met Plotly
+  fig = go.Figure()
+ 
+# Plot voor elke maatschappij
+  for maatschappij in mean_diff_per_year_maatschappij['maatschappij'].unique():
+        subset = mean_diff_per_year_maatschappij[mean_diff_per_year_maatschappij['maatschappij'] == maatschappij]
+        fig.add_trace(go.Scatter(
+            x=subset['Year'], 
+            y=subset['verschil_minuten'], 
+            mode='markers+lines', 
+            name=f'Gemiddeld Verschil - {maatschappij}',
+            hovertemplate=f'Maatschappij: {maatschappij}<br>Jaar: %{{x}}<br>Gemiddeld Verschil: %{{y:.2f}} minuten',
+            marker=dict(size=8)
+        ))
+        future_subset = all_predictions[all_predictions['maatschappij'] == maatschappij]
+        fig.add_trace(go.Scatter(
+            x=future_subset['Year'], 
+            y=future_subset['Voorspelling'], 
+            mode='markers+lines', 
+            name=f'Voorspelling - {maatschappij}',
+            hovertemplate=f'Maatschappij: {maatschappij}<br>Jaar: %{{x}}<br>Voorspelling: %{{y:.2f}} minuten',
+            line=dict(dash='dash'),
+            marker=dict(size=8)
+        ))
+ 
+# Update layout
+  fig.update_layout(
+        title="Gemiddeld Aankomstvertraging per Jaar per Maatschappij met Voorspelling",
+        xaxis_title="Jaar",
+        yaxis_title="Gemiddeld Aankomstverschil in Minuten",
+        xaxis=dict(tickmode='linear'),
+        legend_title="Legenda",
+        hovermode='x unified'
+    )
+ 
+# Gebruik Streamlit om de plot te tonen
+  st.plotly_chart(fig)
