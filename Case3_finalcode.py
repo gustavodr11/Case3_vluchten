@@ -25,7 +25,7 @@ if selected == 'Intro':
 
     # Korte uitleg
     st.write("""
-        Korte Uitleg test test test
+        Korte Uitleg 
     """)
   
     # Bronnen
