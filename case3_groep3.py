@@ -304,22 +304,22 @@ if selected == 'Luchthavens':
 # Gemiddelde vertraging per luchthaven en jaar berekenen
   gemiddelde_vertraging = df.groupby(['City', 'Jaartal'])['verschil_minuten'].mean().reset_index()
 
-# Aantal vluchten per luchthaven en jaar tellen
+  # Aantal vluchten per luchthaven en jaar tellen
   aantal_vluchten = df.groupby(['City', 'Jaartal']).size().reset_index(name='aantal_vluchten')
 
-# De resultaten samenvoegen
+  # De resultaten samenvoegen
   if not gemiddelde_vertraging.empty and not aantal_vluchten.empty:
       gemiddelde_vertraging = gemiddelde_vertraging.merge(aantal_vluchten, on=['City', 'Jaartal'])
 
-# Split de data op basis van jaartal
+  # Split de data op basis van jaartal
   df_2019 = gemiddelde_vertraging[gemiddelde_vertraging['Jaartal'] == 2019]
   df_2020 = gemiddelde_vertraging[gemiddelde_vertraging['Jaartal'] == 2020]
 
-# Bepaal de maximale en minimale waarde voor de y-as
+  # Bepaal de maximale en minimale waarde voor de y-as
   max_vertraging = max(gemiddelde_vertraging['verschil_minuten'].max(), 0)
   min_vertraging = min(gemiddelde_vertraging['verschil_minuten'].min(), 0)
 
-# Bar plot voor 2019
+  # Bar plot voor 2019
   fig_2019 = px.bar(
       df_2019,
       x='City',
@@ -329,12 +329,12 @@ if selected == 'Luchthavens':
       color='verschil_minuten',
       text='aantal_vluchten',  # Aantal vluchten als tekstlabel
       color_continuous_scale=px.colors.sequential.Viridis
-   )
+  )
 
-# Y-as instellen voor 2019
+  # Y-as instellen voor 2019
   fig_2019.update_yaxes(range=[min_vertraging, max_vertraging])
 
-# Bar plot voor 2020
+  # Bar plot voor 2020
   fig_2020 = px.bar(
       df_2020,
       x='City',
@@ -346,12 +346,17 @@ if selected == 'Luchthavens':
       color_continuous_scale=px.colors.sequential.Viridis
   )
 
-# Y-as instellen voor 2020
+  # Y-as instellen voor 2020
   fig_2020.update_yaxes(range=[min_vertraging, max_vertraging])
 
-# Plotten van beide figuren in Streamlit
-  st.plotly_chart(fig_2019)
-  st.plotly_chart(fig_2020)
+  # Dropdown menu voor de selectie van het jaar
+  jaar_keuze = st.selectbox("Selecteer het jaar", options=["2019", "2020"])
+
+  # Plot tonen op basis van de selectie
+  if jaar_keuze == "2019":
+      st.plotly_chart(fig_2019)
+  else:
+      st.plotly_chart(fig_2020)
 
 #------------------------------------------------------------------
   st.subheader("Drukte op luchthavens in de tijd")
