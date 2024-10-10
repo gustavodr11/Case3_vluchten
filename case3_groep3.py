@@ -478,16 +478,16 @@ if selected == 'Luchthavens':
         return
 
     # Groepeer op maand en tel het aantal unieke vluchten (TAR) per maand
-    flights_per_month = filtered_data.groupby(filtered_data['STD'].dt.month)['TAR'].nunique().reset_index()
-    flights_per_month.columns = ['Maand', 'Aantal_vluchten']
+  flights_per_month = filtered_data.groupby(filtered_data['STD'].dt.month)['TAR'].nunique().reset_index()
+  flights_per_month.columns = ['Maand', 'Aantal_vluchten']
 
     # Lijndiagram maken met Plotly Express
-    fig = px.line(flights_per_month, 
-                  x='Maand', 
-                  y='Aantal_vluchten', 
-                  title=f"Aantal vluchten per maand in {selected_year} voor luchthaven {selected_airport}",
-                  labels={'Maand': 'Maand', 'Aantal_vluchten': 'Aantal vluchten'})
+  fig = px.line(flights_per_month, 
+                x='Maand', 
+                y='Aantal_vluchten', 
+                title=f"Aantal vluchten per maand in {selected_year} voor luchthaven {selected_airport}",
+                labels={'Maand': 'Maand', 'Aantal_vluchten': 'Aantal vluchten'})
   
     # Toon het lijndiagram
-    st.plotly_chart(fig)
+  st.plotly_chart(fig)
 
