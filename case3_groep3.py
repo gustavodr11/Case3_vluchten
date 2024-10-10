@@ -1,10 +1,13 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
 import pandas as pd
+import numpy as np
 import folium
 import branca.colormap as cm
 from streamlit_folium import st_folium
 import plotly.express as px
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
 st.set_page_config(page_title='Case 3 Vluchten (groep 3)', page_icon='✈️')
 
@@ -14,7 +17,7 @@ with st.sidebar:
 
 # --------------------------------------------------------------------------
 
-# Intro pagina
+# INTRO pagina
 if selected == 'Intro':
     st.title("Case 3 Vluchten - Groep 3")
 
@@ -32,7 +35,7 @@ if selected == 'Intro':
 
 # --------------------------------------------------------------------------
 
-# Vluchten pagina
+# VLUCHTEN pagina
 if selected == "Vluchten": 
   st.title("7 Vluchten (AMS - BCN)") 
 
@@ -145,8 +148,97 @@ if selected == "Vluchten":
   # Toon de grafiek in Streamlit
   st.plotly_chart(fig)
 
+# -------------------------------------
+
+  # Functie om de haversine afstand te berekenen tussen twee punten
+  def haversine(lat1, lon1, lat2, lon2):
+      R = 6371  # Aarde's straal in kilometers
+      phi1 = np.radians(lat1)
+      phi2 = np.radians(lat2)
+      delta_phi = np.radians(lat2 - lat1)
+      delta_lambda = np.radians(lon2 - lon1)
+    
+      a = np.sin(delta_phi / 2) ** 2 + np.cos(phi1) * np.cos(phi2) * np.sin(delta_lambda / 2) ** 2
+      c = 2 * np.arctan2(np.sqrt(a), np.sqrt(1 - a))
+    
+      return R * c  # Afstand in kilometers
+
+  # Voeg een kolom toe voor de afstand tussen opeenvolgende coördinaten
+  def bereken_afstand(df2):
+      afstanden = []
+      for i in range(1, len(df2)):
+          lat1, lon1 = df2.iloc[i-1]['[3d Latitude]'], df2.iloc[i-1]['[3d Longitude]']
+          lat2, lon2 = df2.iloc[i]['[3d Latitude]'], df2.iloc[i]['[3d Longitude]']
+          afstand = haversine(lat1, lon1, lat2, lon2)
+          afstanden.append(afstand)
+      afstanden.insert(0, 0)  # Eerste punt heeft geen vorige punt, dus afstand is 0
+      df2['Afstand (km)'] = afstanden
+      df2['Cumulatieve afstand (km)'] = df2['Afstand (km)'].cumsum()  # Totale afstand berekenen
+      return df
+
+  # Functie om vluchtduur te berekenen (geen hoogtepunten meer gebruiken)
+  def bereken_vluchtduur(df2):
+      # Tijd in seconden omzetten naar uren voor leesbaarheid
+      df2['Time (hours)'] = df2['Time (secs)'] / 3600
+    
+      # Gebruik de eerste en laatste tijdsstempel
+      tijd_opstijgen = df2['Time (hours)'].iloc[0]
+      tijd_landen = df2['Time (hours)'].iloc[-1]
+    
+      # Bereken de totale vluchtduur in uren
+      vluchtduur = tijd_landen - tijd_opstijgen
+      return vluchtduur
+
+  # Verzamel de totale afstanden en vluchtduur van alle vluchten
+  totale_afstanden = {}
+  vluchtduur_per_vlucht = {}
+
+  for vlucht, df in vluchten_data.items():
+      # Bereken de afstand
+      df2 = bereken_afstand(df)
+      totale_afstand = df2['Cumulatieve afstand (km)'].iloc[-1]
+      totale_afstanden[vlucht] = totale_afstand
+    
+      # Bereken de vluchtduur
+      vluchtduur = bereken_vluchtduur(df)
+      vluchtduur_per_vlucht[vlucht] = vluchtduur
+
+  # Plot de twee grafieken naast elkaar met Plotly
+  fig = make_subplots(rows=1, cols=2, subplot_titles=("Totale Afstanden per Vlucht", "Vluchtduur per Vlucht"))
+
+  # Grafiek 1: Totale Afstand per vlucht
+  fig.add_trace(go.Bar(x=list(totale_afstanden.keys()), 
+                       y=list(totale_afstanden.values()), 
+                       name="Totale Afstand (km)", 
+                       marker_color='skyblue'), 
+                row=1, col=1)
+
+  # Stel de y-as limiet in voor de totale afstandsgrafiek (1200 tot 1400 km)
+  fig.update_yaxes(range=[1200, 1350], row=1, col=1)
+
+  # Grafiek 2: Vluchtduur per vlucht
+  fig.add_trace(go.Bar(x=list(vluchtduur_per_vlucht.keys()), 
+                       y=list(vluchtduur_per_vlucht.values()), 
+                       name="Vluchtduur (uren)", 
+                       marker_color='lightgreen'), 
+                row=1, col=2)
+
+  # Update layout voor beide grafieken
+  fig.update_layout(
+      title_text="Afstand en Vluchtduur per Vlucht (AMS naar BCN)",
+      showlegend=False,
+      height=600, width=1000
+  )
+
+  # Y-as titels voor de afzonderlijke grafieken
+  fig.update_yaxes(title_text="Afstand (km)", row=1, col=1)
+  fig.update_yaxes(title_text="Vluchtduur (uren)", row=1, col=2)
+
+  # Toon de figuur
+  fig.show()
+
 # --------------------------------------------------------------------------
-# Vluchten pagina
+# LUCHTHAVENS pagina
 if selected == 'Luchthavens':
   st.title("Luchthavens") 
   st.subheader("Top 20 luchthavens") 
