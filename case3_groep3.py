@@ -249,6 +249,6 @@ if selected == "Vluchten":
 
 # --------------------------------------------------------------------------
 if selected == 'Luchthavens':
-    st.title("Luchthavens")
+  st.title("Luchthavens")
   st.subheader("Top 20 luchthavens")
 
