@@ -253,4 +253,109 @@ if selected == "Vluchten":
 if selected == 'Luchthavens':
   st.title("Luchthavens")
   st.subheader("Top 20 luchthavens")
+# Lees de datasets in
+  df = pd.read_csv("DatasetLuchthaven_murged2.csv")
+  luchthaven_frequentie = pd.read_csv("luchthaven_frequentie.csv")
+
+    # Maak een bar plot van de 20 meest voorkomende luchthavens met Plotly
+  fig = px.bar(
+      luchthaven_frequentie,
+      x='luchthaven',
+      y='aantal_vluchten',
+      title='Top 20 Meest Voorkomende Luchthavens',
+      labels={'luchthaven': 'luchthaven', 'aantal_vluchten': 'Aantal Vluchten'},
+      color_discrete_sequence=['blue']  # Maak alle bars blauw
+  )
+
+    # Pas de layout aan voor betere weergave
+  fig.update_layout(
+      xaxis_title='Luchthaven',
+       yaxis_title='Aantal Vluchten',
+       xaxis_tickangle=-45,
+  )
+
+    # Toon de grafiek
+  st.plotly_chart(fig)
+
+  st.subheader("Luchthavens zijn optijd?")
+ # Groeperen per luchthaven en status
+  grouped = df.groupby(['City', 'status']).size().unstack(fill_value=0)
+
+    # Berekenen van het percentage per luchthaven
+  grouped_percentage = grouped.div(grouped.sum(axis=1), axis=0) * 100
+
+    # Voor plotly moeten we het DataFrame omzetten naar een lang formaat
+  grouped_percentage_reset = grouped_percentage.reset_index().melt(id_vars='City', value_vars=['Te laat', 'Op tijd', 'Te vroeg'],
+                                                                     var_name='status', value_name='percentage')
+
+    # Maak een gestapelde bar plot met plotly express
+  fig = px.bar(grouped_percentage_reset, x='City', y='percentage', color='status',
+              title='Percentage vluchten die te laat, op tijd of te vroeg zijn per luchthaven',
+              labels={'percentage': 'Percentage (%)', 'City': 'ICAO'},
+              color_discrete_map={'Te laat': 'red', 'Op tijd': 'green', 'Te vroeg': 'blue'})
+
+    # Pas de lay-out van de grafiek aan
+  fig.update_layout(barmode='stack', xaxis={'categoryorder': 'total descending'})
+
+    # Toon de plot in Streamlit
+  st.plotly_chart(fig)
+# Controleer de kolommen
+  st.write("Kolommen in df:", df.columns)
+  st.write("Kolommen in df:", df.columns)
+
+# Gemiddelde vertraging per luchthaven en jaar berekenen
+  gemiddelde_vertraging = df.groupby(['City', 'Jaartal'])['verschil_minuten'].mean().reset_index()
+
+# Aantal vluchten per luchthaven en jaar tellen
+  aantal_vluchten = df.groupby(['City', 'Jaartal']).size().reset_index(name='aantal_vluchten')
+
+# De resultaten samenvoegen
+  if not gemiddelde_vertraging.empty and not aantal_vluchten.empty:
+      gemiddelde_vertraging = gemiddelde_vertraging.merge(aantal_vluchten, on=['City', 'Jaartal'])
+
+# Split de data op basis van jaartal
+  df_2019 = gemiddelde_vertraging[gemiddelde_vertraging['Jaartal'] == 2019]
+  df_2020 = gemiddelde_vertraging[gemiddelde_vertraging['Jaartal'] == 2020]
+
+# Bepaal de maximale en minimale waarde voor de y-as
+  max_vertraging = max(gemiddelde_vertraging['verschil_minuten'].max(), 0)
+  min_vertraging = min(gemiddelde_vertraging['verschil_minuten'].min(), 0)
+
+# Bar plot voor 2019
+  fig_2019 = px.bar(
+      df_2019,
+      x='City',
+      y='verschil_minuten',
+      title='Gemiddelde vertraging van vluchten per luchthaven in 2019 (in minuten)',
+      labels={'City': 'ICAO', 'verschil_minuten': 'Gemiddelde vertraging (minuten)'},
+      color='verschil_minuten',
+      text='aantal_vluchten',  # Aantal vluchten als tekstlabel
+      color_continuous_scale=px.colors.sequential.Viridis
+   )
+
+# Y-as instellen voor 2019
+  fig_2019.update_yaxes(range=[min_vertraging, max_vertraging])
+
+# Bar plot voor 2020
+  fig_2020 = px.bar(
+      df_2020,
+      x='City',
+      y='verschil_minuten',
+      title='Gemiddelde vertraging van vluchten per luchthaven in 2020 (in minuten)',
+      labels={'City': 'Luchthaven', 'verschil_minuten': 'Gemiddelde vertraging (minuten)'},
+      color='verschil_minuten',
+      text='aantal_vluchten',  # Aantal vluchten als tekstlabel
+      color_continuous_scale=px.colors.sequential.Viridis
+  )
+
+# Y-as instellen voor 2020
+  fig_2020.update_yaxes(range=[min_vertraging, max_vertraging])
+
+# Plotten van beide figuren in Streamlit
+  st.plotly_chart(fig_2019)
+  st.plotly_chart(fig_2020)
+
+
+
+
 
