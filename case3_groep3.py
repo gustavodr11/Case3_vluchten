@@ -417,40 +417,24 @@ if selected == 'Luchthavens':
   st.write("")  
 # Interactieve grafiek met een slider
   def create_aircraft_slider_plot():
-      start_date = pd.to_datetime('2019-01-01')
-      end_date = pd.to_datetime('2020-12-31')
-      days = pd.date_range(start=start_date, end=end_date, freq='D')
+    # Bepaal het begin en eind van de data
+    start_date = pd.to_datetime('2019-01-01')
+    end_date = pd.to_datetime('2020-12-31')
 
-      frames = []
+    # Slider in Streamlit om een datum te kiezen
+    selected_date = st.slider("Selecteer een datum", min_value=start_date, max_value=end_date, value=start_date)
 
-      for day in days:
-        filtered_data = calculate_aircraft_on_airport(day)
-        fig = px.bar(filtered_data, x='City', y='Aantal_vliegtuigen', title=f"Aantal vliegtuigen per luchthaven op {day.date()}")
-        frames.append(go.Frame(data=fig.data, name=str(day.date())))
+    # Bereken de data voor de geselecteerde dag
+    filtered_data = calculate_aircraft_on_airport(selected_date)
 
-    # Initiële figuur
-  initial_fig = calculate_aircraft_on_airport(days[0])
-  fig = px.bar(initial_fig, x='City', y='Aantal_vliegtuigen', title=f"Aantal vliegtuigen per luchthaven op {days[0].date()}")
+    # Maak de plot met Plotly
+    fig = px.bar(filtered_data, x='City', y='Aantal_vliegtuigen',
+                 title=f"Aantal vliegtuigen per luchthaven op {selected_date.date()}")
+    
+    # Toon de plot in Streamlit
+    st.plotly_chart(fig)
 
-  fig = go.Figure(
-      data=fig.data,
-      layout=go.Layout(
-          sliders=[{
-              'steps': [{
-                  'args': [[str(day.date())], {'frame': {'duration': 300, 'redraw': True}, 'mode': 'immediate'}],
-                   'label': str(day.date()),
-                   'method': 'animate'
-                } for day in days],
-              'currentvalue': {'prefix': 'Datum: '},
-              'pad': {'b': 10},
-          }]
-       ),
-      frames=frames
-    )
-
-  st.plotly_chart(fig)
-
-# Aanroepen van de slider grafiek
+# Aanroepen van de slider grafiek in Streamlit
   if st.checkbox("Toon interactieve grafiek met slider"):
       create_aircraft_slider_plot()
 #--------------------------------------------------------------------------
