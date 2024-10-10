@@ -248,18 +248,7 @@ if selected == "Vluchten":
   st.plotly_chart(fig2)
 
 # --------------------------------------------------------------------------
-# Vluchten pagina
-import streamlit as st
-import pandas as pd
-import plotly.express as px
-import folium
-from streamlit_folium import st_folium
-from folium.plugins import HeatMap
-import plotly.graph_objects as go
-
-# Vluchten pagina
-@st.cache_resource
 if selected == 'Luchthavens':
-  st.title("Luchthavens")
+    st.title("Luchthavens")
   st.subheader("Top 20 luchthavens")
 
