@@ -260,22 +260,22 @@ import plotly.graph_objects as go
 # Vluchten pagina
 @st.cache_resource
 if selected == 'Luchthavens':
-    st.title("Luchthavens")
-    st.subheader("Top 20 luchthavens")
+  st.title("Luchthavens")
+  st.subheader("Top 20 luchthavens")
 
     # Lees de datasets in
-    df = pd.read_csv("DatasetLuchthaven_murged2.csv")
-    luchthaven_frequentie = pd.read_csv("luchthaven_frequentie.csv")
+  df = pd.read_csv("DatasetLuchthaven_murged2.csv")
+  luchthaven_frequentie = pd.read_csv("luchthaven_frequentie.csv")
 
     # Maak een bar plot van de 20 meest voorkomende luchthavens met Plotly
-    fig = px.bar(
-        luchthaven_frequentie,
-        x='luchthaven',
-        y='aantal_vluchten',
-        title='Top 20 Meest Voorkomende Luchthavens',
-        labels={'luchthaven': 'luchthaven', 'aantal_vluchten': 'Aantal Vluchten'},
-        color_discrete_sequence=['blue']  # Maak alle bars blauw
-    )
+  fig = px.bar(
+      luchthaven_frequentie,
+      x='luchthaven',
+      y='aantal_vluchten',
+      title='Top 20 Meest Voorkomende Luchthavens',
+      labels={'luchthaven': 'luchthaven', 'aantal_vluchten': 'Aantal Vluchten'},
+       color_discrete_sequence=['blue']  # Maak alle bars blauw
+   )
 
     # Pas de layout aan voor betere weergave
     fig.update_layout(
