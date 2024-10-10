@@ -204,38 +204,38 @@ if selected == "Vluchten":
       vluchtduur_per_vlucht[vlucht] = vluchtduur
 
   # Plot de twee grafieken naast elkaar met Plotly
-  fig = make_subplots(rows=1, cols=2, subplot_titles=("Totale Afstanden per Vlucht", "Vluchtduur per Vlucht"))
+  fig2 = make_subplots(rows=1, cols=2, subplot_titles=("Totale Afstanden per Vlucht", "Vluchtduur per Vlucht"))
 
   # Grafiek 1: Totale Afstand per vlucht
-  fig.add_trace(go.Bar(x=list(totale_afstanden.keys()), 
+  fig2.add_trace(go.Bar(x=list(totale_afstanden.keys()), 
                        y=list(totale_afstanden.values()), 
                        name="Totale Afstand (km)", 
                        marker_color='skyblue'), 
                 row=1, col=1)
 
   # Stel de y-as limiet in voor de totale afstandsgrafiek (1200 tot 1400 km)
-  fig.update_yaxes(range=[1200, 1350], row=1, col=1)
+  fig2.update_yaxes(range=[1200, 1350], row=1, col=1)
 
   # Grafiek 2: Vluchtduur per vlucht
-  fig.add_trace(go.Bar(x=list(vluchtduur_per_vlucht.keys()), 
+  fig2.add_trace(go.Bar(x=list(vluchtduur_per_vlucht.keys()), 
                        y=list(vluchtduur_per_vlucht.values()), 
                        name="Vluchtduur (uren)", 
                        marker_color='lightgreen'), 
                 row=1, col=2)
 
   # Update layout voor beide grafieken
-  fig.update_layout(
+  fig2.update_layout(
       title_text="Afstand en Vluchtduur per Vlucht (AMS naar BCN)",
       showlegend=False,
       height=600, width=1000
   )
 
   # Y-as titels voor de afzonderlijke grafieken
-  fig.update_yaxes(title_text="Afstand (km)", row=1, col=1)
-  fig.update_yaxes(title_text="Vluchtduur (uren)", row=1, col=2)
+  fig2.update_yaxes(title_text="Afstand (km)", row=1, col=1)
+  fig2.update_yaxes(title_text="Vluchtduur (uren)", row=1, col=2)
 
   # Toon de figuur
-  fig.show()
+  st.plotly_chart(fig2)
 
 # --------------------------------------------------------------------------
 # LUCHTHAVENS pagina
