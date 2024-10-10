@@ -189,6 +189,16 @@ if selected == "Vluchten":
       vluchtduur = tijd_landen - tijd_opstijgen
       return vluchtduur
 
+  # Lijst met de namen van de vluchten en bestanden
+  vluchten_data = {
+      'vlucht 1': pd.read_excel('30Flight 1.xlsx'),
+      'vlucht 2': pd.read_excel('cleaned_30Flight 2.xlsx'),
+      'vlucht 3': pd.read_excel('cleaned_30Flight 3.xlsx'),
+      'vlucht 4': pd.read_excel('cleaned_30Flight 4.xlsx'),
+      'vlucht 5': pd.read_excel('30Flight 5.xlsx'),
+      'vlucht 6': pd.read_excel('cleaned_30Flight 6.xlsx'),
+      'vlucht 7': pd.read_excel('30Flight 7.xlsx')
+  }
   # Verzamel de totale afstanden en vluchtduur van alle vluchten
   totale_afstanden = {}
   vluchtduur_per_vlucht = {}
