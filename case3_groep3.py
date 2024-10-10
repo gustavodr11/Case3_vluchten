@@ -436,6 +436,5 @@ if selected == 'Luchthavens':
         # Toon de kaart met st_folium
       st.subheader(f"Luchtvaartverkeer op {selected_day}")
       st_folium(traffic_map)  # Gebruik st_folium in plaats van folium_static
-      else:
-        st.warning("Selecteer een datum tussen 2019-01-01 en 2020-12-31.")
+
            
