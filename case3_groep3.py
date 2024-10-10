@@ -353,6 +353,97 @@ if selected == 'Luchthavens':
   st.plotly_chart(fig_2019)
   st.plotly_chart(fig_2020)
 
+#------------------------------------------------------------------
+  st.subheader("Drukte op luchthavens in de tijd")
+
+# Bereken het aantal vliegtuigen op elke luchthaven op een bepaald moment
+  def calculate_aircraft_on_airport(selected_time):
+    # Zorg ervoor dat de STD-kolom correct is geformatteerd als datetime
+    df['STD'] = pd.to_datetime(df['STD'], errors='coerce')
+    
+    # Zorg ervoor dat selected_time een pd.Timestamp is
+    if not isinstance(selected_time, pd.Timestamp):
+        selected_time = pd.to_datetime(selected_time)
+    
+    # Filter de dataframe op basis van landingen en vertrektijden
+    landed = df[(df['LSV'] == 'L') & (df['STD'].notna()) & (df['STD'] <= selected_time)]
+    departed = df[(df['LSV'] == 'S') & (df['STD'].notna()) & (df['STD'] <= selected_time)]
+    
+    # Tel het aantal vliegtuigen per luchthaven
+    landed_count = landed.groupby('City')['TAR'].nunique().reset_index(name='Aantal_vliegtuigen')
+    departed_count = departed.groupby('City')['TAR'].nunique().reset_index(name='Aantal_vertrokken')
+
+    # Bereken het aantal vliegtuigen dat nog op de luchthaven is
+    airport_traffic = pd.merge(landed_count, departed_count, on='City', how='left').fillna(0)
+    airport_traffic['Aantal_vliegtuigen'] = airport_traffic['Aantal_vliegtuigen'] - airport_traffic['Aantal_vertrokken']
+
+    return airport_traffic
+
+
+
+# Streamlit interface
+    st.title("Vliegtuigen op luchthavens")
+    st.write("Selecteer een datum om het aantal vliegtuigen per luchthaven te zien.")
+    st.write("")  
+    st.write("")  
+# Datumkeuze
+    selected_date = st.date_input("Kies een datum:", value=pd.to_datetime('2019-07-15'))
+
+# Bereken het aantal vliegtuigen voor de geselecteerde datum
+    airport_traffic = calculate_aircraft_on_airport(selected_date)
+    st.write("")  
+# Bar plot weergeven
+    fig = px.bar(
+        airport_traffic,
+        x='City',
+        y='Aantal_vliegtuigen',
+        title=f"Aantal vliegtuigen per luchthaven op {selected_date}",
+        labels={'City': 'Luchthaven', 'Aantal_vliegtuigen': 'Aantal Vliegtuigen'},
+        color='Aantal_vliegtuigen',
+        color_continuous_scale=px.colors.sequential.Viridis
+    )
+
+    st.plotly_chart(fig)
+    st.write("")  
+    st.write("")  
+# Interactieve grafiek met een slider
+    def create_aircraft_slider_plot():
+        start_date = pd.to_datetime('2019-01-01')
+        end_date = pd.to_datetime('2020-12-31')
+        days = pd.date_range(start=start_date, end=end_date, freq='D')
+
+        frames = []
+
+        for day in days:
+          filtered_data = calculate_aircraft_on_airport(day)
+          fig = px.bar(filtered_data, x='City', y='Aantal_vliegtuigen', title=f"Aantal vliegtuigen per luchthaven op {day.date()}")
+          frames.append(go.Frame(data=fig.data, name=str(day.date())))
+
+    # Initiële figuur
+        initial_fig = calculate_aircraft_on_airport(days[0])
+        fig = px.bar(initial_fig, x='City', y='Aantal_vliegtuigen', title=f"Aantal vliegtuigen per luchthaven op {days[0].date()}")
+
+        fig = go.Figure(
+            data=fig.data,
+            layout=go.Layout(
+                sliders=[{
+                    'steps': [{
+                        'args': [[str(day.date())], {'frame': {'duration': 300, 'redraw': True}, 'mode': 'immediate'}],
+                        'label': str(day.date()),
+                        'method': 'animate'
+                    } for day in days],
+                    'currentvalue': {'prefix': 'Datum: '},
+                    'pad': {'b': 10},
+                }]
+            ),
+            frames=frames
+        )
+
+        st.plotly_chart(fig)
+
+# Aanroepen van de slider grafiek
+    if st.checkbox("Toon interactieve grafiek met slider"):
+        create_aircraft_slider_plot()
 
 
 
