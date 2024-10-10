@@ -420,21 +420,21 @@ if selected == 'Luchthavens':
 
     return traffic_map
 
-st.subheader("Interactieve Luchtvaartkaart")
+  st.subheader("Interactieve Luchtvaartkaart")
 
     # Datumselector
-      start_date = pd.to_datetime('2019-01-01')
-      end_date = pd.to_datetime('2020-12-31')
-      selected_day = st.date_input("Selecteer een datum", value=start_date)
+  start_date = pd.to_datetime('2019-01-01')
+  end_date = pd.to_datetime('2020-12-31')
+  selected_day = st.date_input("Selecteer een datum", value=start_date)
 
     # Controleer of de geselecteerde datum binnen het bereik ligt
-      if start_date <= pd.Timestamp(selected_day) <= end_date:
+  if start_date <= pd.Timestamp(selected_day) <= end_date:
         # Genereer de kaart voor de geselecteerde datum en tijd
-          selected_date_time = pd.Timestamp(selected_day)
-          traffic_map = create_aircraft_traffic_map(selected_date_time)
+      selected_date_time = pd.Timestamp(selected_day)
+      traffic_map = create_aircraft_traffic_map(selected_date_time)
         
         # Toon de kaart met st_folium
-          st.subheader(f"Luchtvaartverkeer op {selected_day}")
-          st_folium(traffic_map)  # Gebruik st_folium in plaats van folium_static
-      else:
-          st.warning("Selecteer een datum tussen 2019-01-01 en 2020-12-31.")
+    st.subheader(f"Luchtvaartverkeer op {selected_day}")
+    st_folium(traffic_map)  # Gebruik st_folium in plaats van folium_static
+    else:
+        st.warning("Selecteer een datum tussen 2019-01-01 en 2020-12-31.")
