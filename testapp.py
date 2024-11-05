@@ -1,6 +1,7 @@
 import pandas as pd
-import statsmodels.api as sm
-import plotly.graph_objects as go
+import matplotlib.pyplot as plt
+import seaborn as sns
+
 # Zorg ervoor dat de kolom 'STD' datetime objecten zijn en groepeer de data per maand en luchthaven
 df['STD'] = pd.to_datetime(df['STD'])
 df['Maand'] = df['STD'].dt.month
