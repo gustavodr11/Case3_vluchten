@@ -111,4 +111,4 @@ fig.update_layout(
 fig.data[0].visible = True
 fig.data[1].visible = True
 
-fig.show()
+st.plotly_chart(fig)
