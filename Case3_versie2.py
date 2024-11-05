@@ -119,7 +119,8 @@ elif selected == "Vluchten":
         folium.Marker(
             location=[df1['[3d Latitude]'].iloc[0], df1['[3d Longitude]'].iloc[0]],
             popup="AMSTERDAM (AMS)",
-            tooltip="AMSTERDAM (AMS)"
+            tooltip="AMSTERDAM (AMS)",
+            icon=folium.Icon(icon="plane", prefix="fa")
         ).add_to(m)
 
         folium.Marker(
