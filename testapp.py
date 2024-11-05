@@ -6,7 +6,7 @@ from datetime import datetime
 df = pd.read_csv("DatasetLuchthaven_murged2.csv")
 luchthaven_frequentie = pd.read_csv("luchthaven_frequentie.csv")
 
-# Bereken het aantal vluchten per luchthaven per maand
+# Bereken het totale aantal vluchten per luchthaven per maand
 def calculate_flights_per_month(selected_month):
     # Zorg ervoor dat de STD-kolom correct is geformatteerd als datetime
     df['STD'] = pd.to_datetime(df['STD'], errors='coerce')
@@ -15,8 +15,8 @@ def calculate_flights_per_month(selected_month):
     month_data = df[(df['STD'].dt.month == selected_month.month) & (df['STD'].dt.year == selected_month.year)]
     
     # Bereken het aantal inkomende en vertrekkende vluchten per luchthaven
-    inbound_flights = month_data[month_data['LSV'] == 'L'].groupby('City')['FLT'].nunique().reset_index(name='Aantal_inbound')
-    outbound_flights = month_data[month_data['LSV'] == 'S'].groupby('City')['FLT'].nunique().reset_index(name='Aantal_outbound')
+    inbound_flights = month_data[month_data['LSV'] == 'L'].groupby('City').size().reset_index(name='Aantal_inbound')
+    outbound_flights = month_data[month_data['LSV'] == 'S'].groupby('City').size().reset_index(name='Aantal_outbound')
     
     # Voeg de inkomende en vertrekkende vluchten samen per luchthaven
     airport_flights = pd.merge(inbound_flights, outbound_flights, on='City', how='outer').fillna(0)
