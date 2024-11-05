@@ -55,7 +55,7 @@ vluchten_data = {
 }
 
 # Maak knoppen voor elke vlucht en update sessiestatus bij klikken
-vlucht_knoppen = st.columns(7)
+vlucht_knoppen = st.columns([1, 1, 1, 1, 1, 1, 1])
 for i, (label, data) in enumerate(vluchten_data.items()):
     if vlucht_knoppen[i].button(f"{label.capitalize()}"):
         st.session_state.selected_vlucht = label
