@@ -129,6 +129,6 @@ elif selected == "Vluchten":
         ).add_to(m)
 
         colormap.add_to(m)
-        st_folium(m, width=300, height=500)
+        st_folium(m, width=450, height=550)
 
 
