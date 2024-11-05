@@ -289,7 +289,7 @@ if selected == 'Luchthavens':
         return airport_flights
 
     # Streamlit interface
-    st.subheader("Aantal vluchten per luchthaven per maand")
+    st.write("#### Aantal vluchten per luchthaven per maand")
 
     # Slider voor maandselectie
     selected_month = st.slider("Selecteer een maand:", 
