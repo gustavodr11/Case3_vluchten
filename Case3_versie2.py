@@ -24,7 +24,6 @@ with st.sidebar:
         vlucht_selected = option_menu(
             menu_title="Kies een vlucht",
             options=["Vlucht 1", "Vlucht 2", "Vlucht 3", "Vlucht 4", "Vlucht 5", "Vlucht 6", "Vlucht 7"],
-            icons=["airplane"] * 7, # Gebruik hetzelfde vliegtuig-icoon voor elke vlucht
             menu_icon="airplane",
             default_index=0
         )
