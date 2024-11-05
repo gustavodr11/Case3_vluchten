@@ -2,6 +2,8 @@ import pandas as pd
 import statsmodels.api as sm
 import plotly.graph_objects as go
 import streamlit as st
+import numpy as np
+
 
 # Laad de dataset
 df = pd.read_csv("DatasetLuchthaven_murged2.csv")
