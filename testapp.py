@@ -77,3 +77,5 @@ fig.update_layout(
 # Toon de plot in Streamlit
 st.plotly_chart(fig)
 
+model_summary = results.summary().as_text()  # Zet de samenvatting om naar tekst
+st.text(model_summary)
