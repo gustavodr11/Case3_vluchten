@@ -222,10 +222,12 @@ if selected == 'Luchthavens':
 
 
 # --------------------------------------------------
-    st.write("")
+    
     df = pd.read_csv("DatasetLuchthaven_murged2.csv")
     luchthaven_frequentie = pd.read_csv("luchthaven_frequentie.csv")
 
+    st.write(" ")
+    
     # Groeperen per luchthaven en status
     grouped = df.groupby(['City', 'status']).size().unstack(fill_value=0)
 
