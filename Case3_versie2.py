@@ -96,8 +96,8 @@ elif selected == "Vluchten":
     with metrics_col:
         st.metric("Maximale Hoogte (ft)", max_hoogte)
         st.metric("Maximale Snelheid (kts)", max_snelheid)
-        st.metric("Totale Afstand", totale_afstand)
-        st.metric("Totale Tijd", totale_tijd)
+        st.metric("Totale Afstand", afstand)
+        st.metric("Totale Tijd", duur)
 
     with map_col:
         # Maak een lijst van coördinaten (Latitude, Longitude) en de hoogte
