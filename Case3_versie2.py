@@ -182,7 +182,7 @@ fig = px.line(
     color_discrete_map=kleuren_map
 )
 
-fig.update_yaxes(range=[0, 40000], dtick=5000))
+fig.update_yaxes(range=[0, 40000], dtick=5000)
 
 # Interactieve legenda
 fig.update_layout(
