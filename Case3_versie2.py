@@ -212,21 +212,16 @@ if selected == 'Luchthavens':
     
     # Fictieve percentages
     te_vroeg_percentage = 15  # Fictief percentage voor "Te vroeg"
-    op_tijd_percentage = 70   # Fictief percentage voor "Op tijd" 
+    op_tijd_percentage = 70   # Fictief percentage voor "Op tijd"
     te_laat_percentage = 15   # Fictief percentage voor "Te laat"
     
-    # Metrics met kleurcodes voor de waarden
+    # Toon de metrics
     with col1:
-        st.markdown(f"<h2 style='color: blue;'>Te vroeg</h2>", unsafe_allow_html=True)
-        st.metric(label="", value=f"{te_vroeg_percentage}%")
-    
+        st.metric(label="Te vroeg", value=f"{te_vroeg_percentage}%", delta="5%", delta_color="inverse")  # Blauw
     with col2:
-        st.markdown(f"<h2 style='color: green;'>Op tijd</h2>", unsafe_allow_html=True)
-        st.metric(label="", value=f"{op_tijd_percentage}%")
-    
+        st.metric(label="Op tijd", value=f"{op_tijd_percentage}%", delta="0%", delta_color="normal")  # Groen
     with col3:
-        st.markdown(f"<h2 style='color: red;'>Te laat</h2>", unsafe_allow_html=True)
-        st.metric(label="", value=f"{te_laat_percentage}%")
+        st.metric(label="Te laat", value=f"{te_laat_percentage}%", delta="-3%", delta_color="inverse")  # Rood
    
 
 
