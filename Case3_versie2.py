@@ -223,7 +223,8 @@ if selected == 'Luchthavens':
 
 # --------------------------------------------------
 
-    st.subheader("Punctualiteit per Luchthaven (%)")
+    df = pd.read_csv("DatasetLuchthaven_murged2.csv")
+    luchthaven_frequentie = pd.read_csv("luchthaven_frequentie.csv")
 
     # Groeperen per luchthaven en status
     grouped = df.groupby(['City', 'status']).size().unstack(fill_value=0)
