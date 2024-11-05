@@ -102,7 +102,7 @@ elif selected == "Vluchten":
         st.metric("Maximale Snelheid (kts)", max_snelheid)
         st.metric("Totale Afstand (km)", afstand)
         st.metric("Totale Tijd (uur)", duur)
-        st.metric("Uitstoot (kg CO₂)", f"{uitstoot:.2f} kg CO₂")
+        st.metric("Uitstoot (kg CO₂)", uitstoot)
 
     with map_col:
         # Maak een lijst van coördinaten (Latitude, Longitude) en de hoogte
