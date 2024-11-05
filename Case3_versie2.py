@@ -205,7 +205,7 @@ elif selected == "Vluchten":
 
 # --------------------------------------------------------------------------
 if selected == 'Luchthavens':
-  st.title("Luchthavens") 
+    st.title("Luchthavens") 
 
     # Maak drie kolommen voor de metrics
     col1, col2, col3 = st.columns(3)
