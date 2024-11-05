@@ -212,18 +212,62 @@ if selected == 'Luchthavens':
     # Maak drie kolommen voor de metrics
     col1, col2, col3 = st.columns(3)
     
-    # Fictieve percentages
-    #te_vroeg_percentage = 38  # Fictief percentage voor "Te vroeg"
-    op_tijd_percentage = 70   # Fictief percentage voor "Op tijd"
-    te_laat_percentage = 15   # Fictief percentage voor "Te laat"
-    
     # Toon de metrics
     with col1:
         st.metric(label="Rome", value=f"38%", delta="Te vroeg")
     with col2:
         st.metric(label="Stockholm", value=f"11%", delta="Op Tijd")
     with col3:
-        st.metric(label="Stockholm", value=f"69%", delta="Te laat", delta_color="inverse")  # Rood
+        st.metric(label="Stockholm", value=f"69%", delta="Te laat", delta_color="inverse")
+
+
+# --------------------------------------------------
+
+    st.subheader("Punctualiteit per Luchthaven (%)")
+
+    # Groeperen per luchthaven en status
+    grouped = df.groupby(['City', 'status']).size().unstack(fill_value=0)
+
+    # Berekenen van het percentage per luchthaven
+    grouped_percentage = grouped.div(grouped.sum(axis=1), axis=0) * 100
+
+    # DataFrame omzetten naar lang formaat voor Plotly
+    grouped_percentage_reset = grouped_percentage.reset_index().melt(id_vars='City', value_vars=['Te laat', 'Op tijd', 'Te vroeg'],
+                                                                 var_name='status', value_name='percentage')
+
+    # Maak een gestapelde bar plot met Plotly Express
+    fig = px.bar(
+        grouped_percentage_reset,
+        x='City',
+        y='percentage',
+        color='status',
+        title='Punctualiteit per Luchthaven (%)',
+        labels={'percentage': 'Percentage (%)', 'City': 'Luchthaven'},
+        color_discrete_map={'Te laat': '#FF4B4B', 'Op tijd': '#4CAF50', 'Te vroeg': '#4B7BFF'}
+    )
+
+    # Pas de layout van de grafiek aan
+    fig.update_layout(
+        barmode='stack',
+        xaxis={'categoryorder': 'total descending'},
+        legend=dict(title="Status", orientation="h", y=1.1, x=0.5, xanchor="center"),  # Legenda bovenaan gecentreerd
+        title={'x': 0.5},  # Titel centreren
+        yaxis=dict(tickformat=".0f"),  # Geen decimalen in y-as
+    )
+
+    # Voeg percentages toe boven de bars
+    fig.update_traces(texttemplate='%{y:.1f}%', textposition='inside', insidetextanchor='middle')
+
+    # Pas de lettergrootte aan voor betere leesbaarheid
+    fig.update_layout(
+        font=dict(size=12),
+        xaxis_title="Luchthaven (ICAO)",
+        yaxis_title="Percentage (%)"
+    )
+
+    # Toon de plot in Streamlit
+    st.plotly_chart(fig)
+
    
 
 
