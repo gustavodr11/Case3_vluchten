@@ -141,6 +141,74 @@ elif selected == "Vluchten":
         ).add_to(m)
 
         colormap.add_to(m)
-        st_folium(m, width=600, height=550)
+        st_folium(m, width=600, height=550) 
+
+
+        # --------------------------------------
+
+# Voeg 'ALL' toe aan de opties voor het dropdownmenu
+selected_vlucht = st.selectbox("Selecteer een vlucht", options=['ALL'] + [f'vlucht {i}' for i in range(1, 8)])
+
+# Combineer data van alle vluchten indien 'ALL' is geselecteerd en voeg een kolom toe om de vlucht te labelen
+if selected_vlucht == 'ALL':
+    df_all = pd.concat([df.assign(vlucht=vlucht) for vlucht, df in vluchten_data.items()], ignore_index=True)
+    df1 = df_all
+else:
+    df1 = vluchten_data[selected_vlucht]
+    df1['vlucht'] = selected_vlucht  # Voeg een kolom toe om de vlucht te labelen
+
+# Tijd omzetten van seconden naar uren
+df1['Time (hours)'] = df1['Time (secs)'] / 3600
+
+# Specifieke kleuren toewijzen aan elke vlucht
+kleuren_map = {
+    'vlucht 1': 'red',
+    'vlucht 2': 'green',
+    'vlucht 3': 'blue',
+    'vlucht 4': 'orange',
+    'vlucht 5': 'purple',
+    'vlucht 6': 'brown',
+    'vlucht 7': 'pink'
+}
+
+# Maak de lijnplot met verbeteringen
+fig = px.line(
+    df1, 
+    x='Time (hours)', 
+    y='[3d Altitude Ft]', 
+    title='Hoogte vs Tijd',  
+    labels={"Time (hours)": "Tijd (uren)", "[3d Altitude Ft]": "Hoogte (ft)"},
+    color='vlucht',  
+    color_discrete_map=kleuren_map
+)
+
+# Hover-informatie verfijnen
+fig.update_traces(
+    mode="lines+markers", 
+    marker=dict(size=5),
+    hovertemplate="<b>Vlucht:</b> %{customdata[0]}<br><b>Tijd:</b> %{x:.2f} uur<br><b>Hoogte:</b> %{y:.0f} ft"
+)
+
+# Interactieve legenda
+fig.update_layout(
+    legend_title_text="Vlucht",
+    legend=dict(
+        itemclick="toggleothers",
+        itemdoubleclick="toggle"
+    )
+)
+
+# Voeg een horizontale lijn toe op gemiddelde hoogte voor referentie
+fig.add_hline(
+    y=20000, 
+    line_dash="dash", 
+    line_color="gray", 
+    annotation_text="Gemiddelde Hoogte", 
+    annotation_position="bottom right"
+)
+
+# Toon de grafiek in Streamlit
+st.plotly_chart(fig)
+
 
 
