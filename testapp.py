@@ -3,6 +3,9 @@ import pandas as pd
 import plotly.express as px
 from datetime import datetime
 
+df = pd.read_csv("DatasetLuchthaven_murged2.csv")
+luchthaven_frequentie = pd.read_csv("luchthaven_frequentie.csv")
+
 # Bereken het totale aantal vliegtuigen op elke luchthaven gedurende een maand
 def calculate_aircraft_on_airport(selected_month):
     # Zorg ervoor dat de STD-kolom correct is geformatteerd als datetime
