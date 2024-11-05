@@ -93,7 +93,7 @@ elif selected == "Vluchten":
         coordinates = list(zip(df1['[3d Latitude]'], df1['[3d Longitude]'], df1['[3d Altitude Ft]']))
         #mid_lat = df1['[3d Latitude]'].mean()
         #mid_lon = df1['[3d Longitude]'].mean()
-        m = folium.Map(location=[48.8566, 2.3522], zoom_start=5, tiles='CartoDB positron')
+        m = folium.Map(location=[46.9905, 3.1384], zoom_start=5, tiles='CartoDB positron')
 
         # Creëer een colormap op basis van hoogte
         colormap = cm.LinearColormap(colors=['yellow', 'green', 'turquoise', 'blue', 'purple'], 
