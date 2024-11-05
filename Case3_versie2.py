@@ -30,7 +30,7 @@ if selected == 'Intro':
     """)
   
     # Bronnen
-    st.write("### Gebruikte Bronnen:")
+    st.write("#### Gebruikte Bronnen:")
     st.write("""
         - [Youtube filmpje](https://www.youtube.com/watch?v=hEPoto5xp3k)
         - [Streamlit documentatie](https://docs.streamlit.io/)
