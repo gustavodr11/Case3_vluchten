@@ -219,9 +219,9 @@ if selected == 'Luchthavens':
     with col1:
         st.metric(label="Rome", value=f"38%", delta="Te vroeg")
     with col2:
-        st.metric(label="Stockholm", value=f"11%", delta="Op Tijd%")
+        st.metric(label="Stockholm", value=f"11%", delta="Op Tijd")
     with col3:
-        st.metric(label="Stockholm", value=f"69%", delta="Te laat%", delta_color="inverse")  # Rood
+        st.metric(label="Stockholm", value=f"69%", delta="Te laat", delta_color="inverse")  # Rood
    
 
 
