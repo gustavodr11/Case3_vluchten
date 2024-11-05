@@ -206,8 +206,8 @@ elif selected == "Vluchten":
 # --------------------------------------------------------------------------
 if selected == 'Luchthavens':
     st.title("Luchthavens") 
-    st.subheader(" ")
-    st.subheader("Luchthavens met Hoogste Percentage Te Vroeg, Op Tijd en Te Laat")
+    st.write("#### ")
+    st.write("#### Luchthavens met Hoogste Percentage Te Vroeg, Op Tijd en Te Laat")
 
     # Maak drie kolommen voor de metrics
     col1, col2, col3 = st.columns(3)
@@ -225,8 +225,6 @@ if selected == 'Luchthavens':
     
     df = pd.read_csv("DatasetLuchthaven_murged2.csv")
     luchthaven_frequentie = pd.read_csv("luchthaven_frequentie.csv")
-
-    st.write(" ")
     
     # Groeperen per luchthaven en status
     grouped = df.groupby(['City', 'status']).size().unstack(fill_value=0)
