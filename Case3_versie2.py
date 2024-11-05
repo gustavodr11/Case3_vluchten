@@ -203,9 +203,9 @@ elif selected == "Vluchten":
     # Toon de grafiek in Streamlit
     st.plotly_chart(fig)
 
-    # --------------------------------------------------
-
-
+# --------------------------------------------------------------------------
+if selected == 'Luchthavens':
+  st.title("Luchthavens")
 
 
 
