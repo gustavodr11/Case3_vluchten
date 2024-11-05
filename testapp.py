@@ -1,9 +1,7 @@
 import pandas as pd
-import statsmodels.api as sm
 import plotly.graph_objects as go
 import streamlit as st
-import numpy as np
-
+from statsmodels.tsa.holtwinters import ExponentialSmoothing
 
 # Laad de dataset
 df = pd.read_csv("DatasetLuchthaven_murged2.csv")
@@ -27,18 +25,16 @@ selected_luchthaven = st.selectbox("Selecteer een luchthaven", luchthavens)
 # Filter de data per geselecteerde luchthaven
 data_per_luchthaven = df_grouped[df_grouped['luchthaven'] == selected_luchthaven].set_index('Maand')
 
-# Pas een SARIMA-model toe om het aantal vluchten te voorspellen
-model = sm.tsa.statespace.SARIMAX(data_per_luchthaven['aantal_vluchten'], 
-                                  order=(1, 1, 1),  # ARIMA parameters (p, d, q)
-                                  seasonal_order=(1, 1, 1, 12),  # SARIMA parameters (P, D, Q, s)
-                                  enforce_stationarity=False, 
-                                  enforce_invertibility=False)
-results = model.fit(disp=False)
+# Pas een Holt-Winters model toe om het aantal vluchten te voorspellen
+model = ExponentialSmoothing(
+    data_per_luchthaven['aantal_vluchten'], 
+    seasonal='add', 
+    seasonal_periods=12
+)
+fit = model.fit()
 
 # Voorspellingen genereren voor het aantal maanden in de dataset
-voorspellingen = results.predict(start=1, end=len(data_per_luchthaven) - 1)
-predicted_mean = np.insert(voorspellingen.values, 0, None)
-data_per_luchthaven['voorspeld_aantal_vluchten'] = predicted_mean
+data_per_luchthaven['voorspeld_aantal_vluchten'] = fit.fittedvalues
 
 # Maak de plot voor werkelijke en voorspelde gegevens
 fig = go.Figure()
@@ -76,6 +72,3 @@ fig.update_layout(
 
 # Toon de plot in Streamlit
 st.plotly_chart(fig)
-
-model_summary = results.summary().as_text()  # Zet de samenvatting om naar tekst
-st.text(model_summary)
