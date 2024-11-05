@@ -80,6 +80,8 @@ elif selected == "Vluchten":
     # Haal de geselecteerde dataframe op uit sessiestatus
     selected_vlucht = st.session_state.selected_vlucht
     df1 = vluchten_data[selected_vlucht]
+    afstand = vlucht_info[selected_vlucht]['afstand']
+    duur = vlucht_info[selected_vlucht]['duur']
 
     # Zorg ervoor dat de kolom 'TRUE AIRSPEED (derived)' numeriek is
     df1['TRUE AIRSPEED (derived)'] = pd.to_numeric(df1['TRUE AIRSPEED (derived)'], errors='coerce')
