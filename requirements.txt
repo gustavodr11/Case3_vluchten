@@ -8,3 +8,4 @@ streamlit_folium
 openpyxl
 scikit-learn
 statsmodels
+matplotlib
