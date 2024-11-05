@@ -275,7 +275,11 @@ if selected == 'Luchthavens':
         # Zorg ervoor dat de STD-kolom correct is geformatteerd als datetime
         df['STD'] = pd.to_datetime(df['STD'], errors='coerce')
     
-        # Filter de dataframe op basis van het geselecteerde maand
+        # Controleer of selected_month een pd.Timestamp object is
+        if not isinstance(selected_month, pd.Timestamp):
+            selected_month = pd.to_datetime(selected_month)
+    
+        # Filter de dataframe op basis van de maand
         landed = df[(df['LSV'] == 'L') & (df['STD'].notna()) & (df['STD'].dt.to_period("M") == selected_month.to_period("M"))]
         departed = df[(df['LSV'] == 'S') & (df['STD'].notna()) & (df['STD'].dt.to_period("M") == selected_month.to_period("M"))]
     
@@ -287,7 +291,10 @@ if selected == 'Luchthavens':
         airport_traffic = pd.merge(landed_count, departed_count, on='City', how='left').fillna(0)
         airport_traffic['Aantal_vliegtuigen'] = airport_traffic['Aantal_vliegtuigen'] - airport_traffic['Aantal_vertrokken']
 
-        return airport_traffic
+    return airport_traffic
+
+
+    
 
     # Streamlit interface
     st.subheader("Drukte op luchthavens in de tijd")
