@@ -206,7 +206,7 @@ elif selected == "Vluchten":
 # --------------------------------------------------------------------------
 if selected == 'Luchthavens':
     st.title("Luchthavens") 
-    st.write("##### ")
+    #st.write("##### ")
     st.write("#### Zijn luchthavens op tijd?")
 
     # Maak drie kolommen voor de metrics
