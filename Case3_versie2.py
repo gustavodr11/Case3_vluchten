@@ -91,9 +91,9 @@ elif selected == "Vluchten":
     with map_col:
         # Maak een lijst van coördinaten (Latitude, Longitude) en de hoogte
         coordinates = list(zip(df1['[3d Latitude]'], df1['[3d Longitude]'], df1['[3d Altitude Ft]']))
-        mid_lat = df1['[3d Latitude]'].mean()
-        mid_lon = df1['[3d Longitude]'].mean()
-        m = folium.Map(location=[mid_lat, mid_lon], zoom_start=5, tiles='CartoDB positron')
+        #mid_lat = df1['[3d Latitude]'].mean()
+        #mid_lon = df1['[3d Longitude]'].mean()
+        m = folium.Map(location=[48.8566, 2.3522], zoom_start=5, tiles='CartoDB positron')
 
         # Creëer een colormap op basis van hoogte
         colormap = cm.LinearColormap(colors=['yellow', 'green', 'turquoise', 'blue', 'purple'], 
