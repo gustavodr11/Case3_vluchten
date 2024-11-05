@@ -1,7 +1,7 @@
 import pandas as pd
 import statsmodels.api as sm
 import plotly.graph_objects as go
-
+ 
 df = pd.read_csv("DatasetLuchthaven_murged2.csv")
 # Zorg ervoor dat de kolom 'STD' datetime objecten zijn en groepeer de data per maand en luchthaven
 df['STD'] = pd.to_datetime(df['STD'])
