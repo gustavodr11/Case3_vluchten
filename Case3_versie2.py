@@ -62,7 +62,9 @@ if selected == "Vluchten":
 
     if selected_vlucht:
         # Haal de geselecteerde dataframe op
-        df1 = vluchten_data[selected_vlucht]
+        df1 = vluchten_data[selected_vlucht] 
+
+        df1['TRUE AIRSPEED (derived)'] = pd.to_numeric(df1['TRUE AIRSPEED (derived)'], errors='coerce')
 
         # Bereken metrics
         max_hoogte = df1['[3d Altitude Ft]'].max()
