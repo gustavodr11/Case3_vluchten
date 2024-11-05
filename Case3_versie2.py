@@ -49,7 +49,7 @@ if selected == 'Intro':
 # VLUCHTEN pagina
 elif selected == "Vluchten": 
     st.title("Vluchten")
-    st.header("De zeven vluchten van AMS naar BCN")
+    st.header("De 7 vluchten van AMS naar BCN")
     st.subheader("    ")
     # Controleer of er al een geselecteerde vlucht is opgeslagen in de sessie
     if "selected_vlucht" not in st.session_state:
