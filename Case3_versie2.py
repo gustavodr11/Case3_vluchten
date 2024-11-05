@@ -77,7 +77,7 @@ elif selected == "Vluchten":
     }
 
     # Parameters voor uitstootberekening
-    emissiefactor = 0.214    # kg CO₂ per passagier per km
+    emissiefactor = 0.190    # kg CO₂ per passagier per km
     aantal_passagiers = 186
 
     # Haal de geselecteerde dataframe op uit sessiestatus
