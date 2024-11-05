@@ -63,7 +63,6 @@ fig.update_layout(
     title=f"Voorspelling en werkelijke gegevens voor {selected_luchthaven}",
     xaxis_title="Maand",
     yaxis_title="Aantal vluchten",
-    height=600
     height=600,
     xaxis=dict(
         tickmode='array',
