@@ -34,7 +34,7 @@ model = sm.tsa.statespace.SARIMAX(data_per_luchthaven['aantal_vluchten'],
 results = model.fit(disp=False)
 
 # Voorspellingen genereren voor het aantal maanden in de dataset
-voorspellingen = results.predict(start=0, end=len(data_per_luchthaven) - 1)
+voorspellingen = results.predict(start=1, end=len(data_per_luchthaven) - 1)
 data_per_luchthaven['voorspeld_aantal_vluchten'] = voorspellingen.values
 
 # Maak de plot voor werkelijke en voorspelde gegevens
