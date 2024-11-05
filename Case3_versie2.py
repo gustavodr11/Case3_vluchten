@@ -211,13 +211,13 @@ if selected == 'Luchthavens':
     col1, col2, col3 = st.columns(3)
     
     # Fictieve percentages
-    te_vroeg_percentage = 38  # Fictief percentage voor "Te vroeg"
+    #te_vroeg_percentage = 38  # Fictief percentage voor "Te vroeg"
     op_tijd_percentage = 70   # Fictief percentage voor "Op tijd"
     te_laat_percentage = 15   # Fictief percentage voor "Te laat"
     
     # Toon de metrics
     with col1:
-        st.metric(label="Rome", value=f"{te_vroeg_percentage}%", delta="-Te vroeg")
+        st.metric(label="Rome", value=f"38%", delta="Te vroeg")
     with col2:
         st.metric(label="Op tijd", value=f"{op_tijd_percentage}%", delta="0%", delta_color="normal")  # Groen
     with col3:
