@@ -1,7 +1,8 @@
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
-from sklearn.linear_model import LinearRegression
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import r2_score, mean_absolute_error
 import numpy as np
 
 # Laad de dataset
@@ -26,22 +27,25 @@ selected_luchthaven = st.selectbox("Selecteer een luchthaven", luchthavens)
 # Filter de data per geselecteerde luchthaven
 data_per_luchthaven = df_grouped[df_grouped['luchthaven'] == selected_luchthaven]
 
-# Voorbereiding voor lineaire regressie: de maand als input en aantal vluchten als output
+# Voorbereiding voor Random Forest: de maand als input en aantal vluchten als output
 X = data_per_luchthaven['Maand'].values.reshape(-1, 1)
 y = data_per_luchthaven['aantal_vluchten']
 
-# Pas lineaire regressie toe
-model = LinearRegression()
+# Pas Random Forest toe
+model = RandomForestRegressor(n_estimators=100, random_state=42)
 model.fit(X, y)
 
 # Voorspellingen genereren
 data_per_luchthaven['voorspeld_aantal_vluchten'] = model.predict(X)
 
+# Bereken evaluatiemaatstaven
+r2 = r2_score(y, data_per_luchthaven['voorspeld_aantal_vluchten'])
+mae = mean_absolute_error(y, data_per_luchthaven['voorspeld_aantal_vluchten'])
+
 # Print modelresultaten in Streamlit
-st.write("### Resultaten van Lineaire Regressie")
-st.write(f"Intercept (snijpunt met de y-as): {model.intercept_:.2f}")
-st.write(f"Maandcoëfficiënt: {model.coef_[0]:.2f}")
-st.write(f"R²-score: {model.score(X, y):.2f}")
+st.write("### Resultaten van Random Forest Regressie")
+st.write(f"R²-score: {r2:.2f}")
+st.write(f"Mean Absolute Error (MAE): {mae:.2f}")
 
 # Maak de plot voor werkelijke en voorspelde gegevens
 fig = go.Figure()
