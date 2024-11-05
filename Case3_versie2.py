@@ -206,6 +206,8 @@ elif selected == "Vluchten":
 # --------------------------------------------------------------------------
 if selected == 'Luchthavens':
     st.title("Luchthavens") 
+    st.subheader(" ")
+    st.subheader("Luchthavens met Hoogste Percentage Te Vroeg, Op Tijd en Te Laat")
 
     # Maak drie kolommen voor de metrics
     col1, col2, col3 = st.columns(3)
