@@ -76,11 +76,16 @@ elif selected == "Vluchten":
         'vlucht 7': pd.read_excel('30Flight 7.xlsx')
     }
 
+    # Parameters voor uitstootberekening
+    emissiefactor = 0.115  # kg CO₂ per passagier per km
+    aantal_passagiers = 150
+
     # Haal de geselecteerde dataframe op uit sessiestatus
     selected_vlucht = st.session_state.selected_vlucht
     df1 = vluchten_data[selected_vlucht]
     afstand = vlucht_info[selected_vlucht]['afstand']
     duur = vlucht_info[selected_vlucht]['duur']
+    uitstoot = afstand * emissiefactor * aantal_passagiers
 
     # Zorg ervoor dat de kolom 'TRUE AIRSPEED (derived)' numeriek is
     df1['TRUE AIRSPEED (derived)'] = pd.to_numeric(df1['TRUE AIRSPEED (derived)'], errors='coerce')
@@ -97,6 +102,7 @@ elif selected == "Vluchten":
         st.metric("Maximale Snelheid (kts)", max_snelheid)
         st.metric("Totale Afstand (km)", afstand)
         st.metric("Totale Tijd (uur)", duur)
+        st.metric("Uitstoot (kg CO₂)", f"{uitstoot:.2f} kg CO₂")
 
     with map_col:
         # Maak een lijst van coördinaten (Latitude, Longitude) en de hoogte
@@ -197,48 +203,6 @@ elif selected == "Vluchten":
 
     # --------------------------------------------------
 
-    # Vluchtdata: afstand in km
-    vlucht_afstanden = {
-        'vlucht 1': 1323,
-        'vlucht 2': 1314,
-        'vlucht 3': 1339,
-        'vlucht 4': 1289,
-        'vlucht 5': 1292,
-        'vlucht 6': 1290,
-        'vlucht 7': 1281
-    }
-
-    # Parameters
-    emissiefactor = 0.115  # kg CO₂ per passagier per km
-    aantal_passagiers = 150
-
-    # Bereken de uitstoot per vlucht
-    uitstoot_data = {vlucht: afstand * emissiefactor * aantal_passagiers for vlucht, afstand in vlucht_afstanden.items()}
-
-    # Zet uitstootdata om naar een DataFrame
-    uitstoot_df = pd.DataFrame(list(uitstoot_data.items()), columns=['Vlucht', 'Uitstoot (kg CO₂)'])
-
-    # Maak een bar plot voor de uitstoot per vlucht
-    fig2 = px.bar(
-        uitstoot_df,
-        x='Vlucht',
-        y='Uitstoot (kg CO₂)',
-        title='Uitstoot per Vlucht',
-        labels={'Uitstoot (kg CO₂)': 'Uitstoot (kg CO₂)'},
-        text='Uitstoot (kg CO₂)',
-        color='Vlucht',  # Kleur de balken per vlucht
-    )
-
-    # Zorg voor een consistente layout
-    fig2.update_layout(showlegend=False)
-    fig2.update_yaxes(range=[0, uitstoot_df['Uitstoot (kg CO₂)'].max() + 200])
-
-    # Toon de grafieken naast elkaar
-    col1, col2 = st.columns(2)
-    with col1:
-        st.plotly_chart(fig, key="hoogte_grafiek")
-    with col2:
-        st.plotly_chart(fig2, key="uitstoot_grafiek")
 
 
 
