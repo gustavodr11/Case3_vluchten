@@ -47,7 +47,9 @@ if selected == 'Intro':
 # --------------------------------------------------------------------------
 
 # VLUCHTEN pagina
-elif selected == "Vluchten":
+elif selected == "Vluchten": 
+    st.title("Vluchten")
+    st.subheader("De zeven vluchten van AMS naar BCN")
     # Controleer of er al een geselecteerde vlucht is opgeslagen in de sessie
     if "selected_vlucht" not in st.session_state:
         st.session_state.selected_vlucht = "vlucht 1"  # Standaard selecteren we de eerste vlucht
