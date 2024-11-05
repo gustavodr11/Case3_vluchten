@@ -222,7 +222,7 @@ if selected == 'Luchthavens':
 
 
 # --------------------------------------------------
-
+    st.write("")
     df = pd.read_csv("DatasetLuchthaven_murged2.csv")
     luchthaven_frequentie = pd.read_csv("luchthaven_frequentie.csv")
 
