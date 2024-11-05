@@ -42,6 +42,8 @@ if selected == 'Intro':
     st.write("""
         - [Youtube filmpje](https://www.youtube.com/watch?v=hEPoto5xp3k)
         - [Streamlit documentatie](https://docs.streamlit.io/)
+        - [Uitstoot data] (https://ecotree.green/nl/calculate-flight-co2#result)
+        - [Max. aantal passagiers (KLM - Boeing 737) (https://www.klm.nl/information/travel-class-extra-options/aircraft-types/boeing-737-800)
     """)
 
 # --------------------------------------------------------------------------
