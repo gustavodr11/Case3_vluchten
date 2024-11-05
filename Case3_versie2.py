@@ -219,7 +219,7 @@ if selected == 'Luchthavens':
     with col3:
         st.metric(label="Stockholm", value=f"69%", delta="Te laat", delta_color="inverse")
 
-
+    st.write("##### ")
 # --------------------------------------------------
     
     df = pd.read_csv("DatasetLuchthaven_murged2.csv")
