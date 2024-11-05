@@ -236,9 +236,10 @@ elif selected == "Vluchten":
     # Toon de grafieken naast elkaar
     col1, col2 = st.columns(2)
     with col1:
-        st.plotly_chart(fig)
+        st.plotly_chart(fig, key="hoogte_grafiek")
     with col2:
-        st.plotly_chart(fig2)
+        st.plotly_chart(fig2, key="uitstoot_grafiek")
+
 
 
 
