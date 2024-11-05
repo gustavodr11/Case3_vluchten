@@ -253,8 +253,6 @@ if selected == 'Luchthavens':
     fig.update_layout(
         barmode='stack',
         xaxis={'categoryorder': 'total descending'},
-        #legend=dict(title="Status", orientation="h", y=1.1, x=0.5, xanchor="center"),  # Legenda bovenaan gecentreerd
-        #title={'x': 0.5},  # Titel centreren
         yaxis=dict(tickformat=".0f"),  # Geen decimalen in y-as
     )
 
@@ -264,7 +262,7 @@ if selected == 'Luchthavens':
     # Pas de lettergrootte aan voor betere leesbaarheid
     fig.update_layout(
         font=dict(size=12),
-        xaxis_title="Luchthaven (ICAO)",
+        xaxis_title="Luchthavens",
         yaxis_title="Percentage (%)"
     )
 
