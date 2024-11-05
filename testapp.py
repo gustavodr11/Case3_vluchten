@@ -14,10 +14,10 @@ def calculate_aircraft_on_airport(selected_month):
     # Controleer of selected_month een pd.Timestamp object is
     if not isinstance(selected_month, pd.Timestamp):
         selected_month = pd.to_datetime(selected_month)
-     
-    # Filter de dataframe op vluchten binnen de geselecteerde maand
-    month_filter = df['STD'].dt.to_period("M") == selected_month.to_period("M")
-    month_data = df[month_filter]
+    
+    # Filter de dataframe om alle landingen en vertrekken gedurende de geselecteerde maand op te nemen
+    month_data = df[df['STD'].dt.month == selected_month.month]
+    month_data = month_data[month_data['STD'].dt.year == selected_month.year]
     
     # Bereken de totale aankomsten en vertrekken per luchthaven gedurende de maand
     landed = month_data[month_data['LSV'] == 'L'].groupby('City')['TAR'].nunique().reset_index(name='Aantal_vliegtuigen')
