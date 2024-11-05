@@ -241,7 +241,7 @@ if selected == 'Luchthavens':
         x='City',
         y='percentage',
         color='status',
-        title='Punctualiteit per Luchthaven (%)',
+        title='Percentage Vluchten Te Laat, Op Tijd, en Te Vroeg per Luchthaven',
         labels={'percentage': 'Percentage (%)', 'City': 'Luchthaven'},
         color_discrete_map={'Te laat': '#FF4B4B', 'Op tijd': '#4CAF50', 'Te vroeg': '#4B7BFF'}
     )
