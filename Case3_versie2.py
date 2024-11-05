@@ -56,13 +56,13 @@ elif selected == "Vluchten":
         st.session_state.selected_vlucht = "vlucht 1"  # Standaard selecteren we de eerste vlucht 
 
     vlucht_info = {
-        'vlucht 1': {'afstand': '1323 km', 'duur': '2.14 uur'},
-        'vlucht 2': {'afstand': '1314 km', 'duur': '1.75 uur'},
-        'vlucht 3': {'afstand': '1339 km', 'duur': '2.19 uur'},
-        'vlucht 4': {'afstand': '1289 km', 'duur': '1.93 uur'},
-        'vlucht 5': {'afstand': '1292 km', 'duur': '2.02 uur'},
-        'vlucht 6': {'afstand': '1290 km', 'duur': '1.74 uur'},
-        'vlucht 7': {'afstand': '1281 km', 'duur': '1.81 uur'}
+        'vlucht 1': {'afstand': '1323', 'duur': '2.14'},
+        'vlucht 2': {'afstand': '1314', 'duur': '1.75'},
+        'vlucht 3': {'afstand': '1339', 'duur': '2.19'},
+        'vlucht 4': {'afstand': '1289', 'duur': '1.93'},
+        'vlucht 5': {'afstand': '1292', 'duur': '2.02'},
+        'vlucht 6': {'afstand': '1290', 'duur': '1.74'},
+        'vlucht 7': {'afstand': '1281', 'duur': '1.81'}
     }
 
     # Laad de 7 Excel-bestanden in een dictionary
@@ -88,8 +88,6 @@ elif selected == "Vluchten":
     # Bereken metrics
     max_hoogte = df1['[3d Altitude Ft]'].max()
     max_snelheid = df1['TRUE AIRSPEED (derived)'].max()
-    totale_afstand = "Totale afstand placeholder"  # Invullen met daadwerkelijke berekening
-    totale_tijd = "Totale tijd placeholder"  # Invullen met daadwerkelijke berekening
 
     # Plaats metrics en kaart naast elkaar
     metrics_col, map_col = st.columns([1, 2])
@@ -97,8 +95,8 @@ elif selected == "Vluchten":
     with metrics_col:
         st.metric("Maximale Hoogte (ft)", max_hoogte)
         st.metric("Maximale Snelheid (kts)", max_snelheid)
-        st.metric("Totale Afstand", afstand)
-        st.metric("Totale Tijd", duur)
+        st.metric("Totale Afstand (km)", afstand)
+        st.metric("Totale Tijd (uur)", duur)
 
     with map_col:
         # Maak een lijst van coördinaten (Latitude, Longitude) en de hoogte
