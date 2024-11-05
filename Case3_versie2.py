@@ -291,7 +291,7 @@ if selected == 'Luchthavens':
         airport_traffic = pd.merge(landed_count, departed_count, on='City', how='left').fillna(0)
         airport_traffic['Aantal_vliegtuigen'] = airport_traffic['Aantal_vliegtuigen'] - airport_traffic['Aantal_vertrokken']
 
-    return airport_traffic
+        return airport_traffic
 
 
     
