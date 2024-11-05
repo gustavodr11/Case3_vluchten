@@ -45,18 +45,7 @@ if selected == 'Intro':
     """)
 
 # --------------------------------------------------------------------------
-
-# Voeg vluchtgegevens toe voor afstand en duur
-vlucht_info = {
-    'vlucht 1': {'afstand': '1323 km', 'duur': '2.14 uur'},
-    'vlucht 2': {'afstand': '1314 km', 'duur': '1.75 uur'},
-    'vlucht 3': {'afstand': '1339 km', 'duur': '2.19 uur'},
-    'vlucht 4': {'afstand': '1289 km', 'duur': '1.93 uur'},
-    'vlucht 5': {'afstand': '1292 km', 'duur': '2.02 uur'},
-    'vlucht 6': {'afstand': '1290 km', 'duur': '1.74 uur'},
-    'vlucht 7': {'afstand': '1281 km', 'duur': '1.81 uur'}
-}
-
+    
 # VLUCHTEN pagina
 elif selected == "Vluchten": 
     st.title("Vluchten")
@@ -64,7 +53,17 @@ elif selected == "Vluchten":
     st.subheader("    ")
     # Controleer of er al een geselecteerde vlucht is opgeslagen in de sessie
     if "selected_vlucht" not in st.session_state:
-        st.session_state.selected_vlucht = "vlucht 1"  # Standaard selecteren we de eerste vlucht
+        st.session_state.selected_vlucht = "vlucht 1"  # Standaard selecteren we de eerste vlucht 
+
+    vlucht_info = {
+        'vlucht 1': {'afstand': '1323 km', 'duur': '2.14 uur'},
+        'vlucht 2': {'afstand': '1314 km', 'duur': '1.75 uur'},
+        'vlucht 3': {'afstand': '1339 km', 'duur': '2.19 uur'},
+        'vlucht 4': {'afstand': '1289 km', 'duur': '1.93 uur'},
+        'vlucht 5': {'afstand': '1292 km', 'duur': '2.02 uur'},
+        'vlucht 6': {'afstand': '1290 km', 'duur': '1.74 uur'},
+        'vlucht 7': {'afstand': '1281 km', 'duur': '1.81 uur'}
+    }
 
     # Laad de 7 Excel-bestanden in een dictionary
     vluchten_data = {
