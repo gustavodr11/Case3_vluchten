@@ -35,7 +35,8 @@ results = model.fit(disp=False)
 
 # Voorspellingen genereren voor het aantal maanden in de dataset
 voorspellingen = results.predict(start=1, end=len(data_per_luchthaven) - 1)
-data_per_luchthaven['voorspeld_aantal_vluchten'] = voorspellingen.values
+predicted_mean = np.insert(voorspellingen.values, 0, None)
+data_per_luchthaven['voorspeld_aantal_vluchten'] = predicted_mean
 
 # Maak de plot voor werkelijke en voorspelde gegevens
 fig = go.Figure()
