@@ -144,58 +144,102 @@ elif selected == "Vluchten":
         st_folium(m, width=600, height=550) 
 
 
-        # --------------------------------------
+    # --------------------------------------
 
-# Voeg 'ALL' toe aan de opties voor het dropdownmenu
-selected_vlucht = st.selectbox("Selecteer een vlucht", options=['ALL'] + [f'vlucht {i}' for i in range(1, 8)])
+    # Voeg 'ALL' toe aan de opties voor het dropdownmenu
+    selected_vlucht = st.selectbox("Selecteer een vlucht", options=['ALL'] + [f'vlucht {i}' for i in range(1, 8)])
 
-# Combineer data van alle vluchten indien 'ALL' is geselecteerd en voeg een kolom toe om de vlucht te labelen
-if selected_vlucht == 'ALL':
-    df_all = pd.concat([df.assign(vlucht=vlucht) for vlucht, df in vluchten_data.items()], ignore_index=True)
-    df1 = df_all
-else:
-    df1 = vluchten_data[selected_vlucht]
-    df1['vlucht'] = selected_vlucht  # Voeg een kolom toe om de vlucht te labelen
+    # Combineer data van alle vluchten indien 'ALL' is geselecteerd en voeg een kolom toe om de vlucht te labelen
+    if selected_vlucht == 'ALL':
+        df_all = pd.concat([df.assign(vlucht=vlucht) for vlucht, df in vluchten_data.items()], ignore_index=True)
+        df1 = df_all
+    else:
+        df1 = vluchten_data[selected_vlucht]
+        df1['vlucht'] = selected_vlucht  # Voeg een kolom toe om de vlucht te labelen
 
-# Tijd omzetten van seconden naar uren
-df1['Time (hours)'] = df1['Time (secs)'] / 3600
+    # Tijd omzetten van seconden naar uren
+    df1['Time (hours)'] = df1['Time (secs)'] / 3600
 
-# Specifieke kleuren toewijzen aan elke vlucht
-kleuren_map = {
-    'vlucht 1': 'red',
-    'vlucht 2': 'green',
-    'vlucht 3': 'blue',
-    'vlucht 4': 'orange',
-    'vlucht 5': 'purple',
-    'vlucht 6': 'brown',
-    'vlucht 7': 'pink'
-}
+    # Specifieke kleuren toewijzen aan elke vlucht
+    kleuren_map = {
+        'vlucht 1': 'red',
+        'vlucht 2': 'green',
+        'vlucht 3': 'blue',
+        'vlucht 4': 'orange',
+        'vlucht 5': 'purple',
+        'vlucht 6': 'brown',
+        'vlucht 7': 'pink'
+    }
 
-# Maak de lijnplot met verbeteringen
-fig = px.line(
-    df1, 
-    x='Time (hours)', 
-    y='[3d Altitude Ft]', 
-    title='Hoogte vs Tijd',  
-    labels={"Time (hours)": "Tijd (uren)", "[3d Altitude Ft]": "Hoogte (ft)"},
-    color='vlucht',  
-    color_discrete_map=kleuren_map
-)
-
-fig.update_yaxes(range=[0, 40000], dtick=5000)
-
-# Interactieve legenda
-fig.update_layout(
-    legend_title_text="Vlucht",
-    legend=dict(
-        itemclick="toggleothers",
-        itemdoubleclick="toggle"
+    # Maak de lijnplot met verbeteringen
+    fig = px.line(
+        df1, 
+        x='Time (hours)', 
+        y='[3d Altitude Ft]', 
+        title='Hoogte vs Tijd',  
+        labels={"Time (hours)": "Tijd (uren)", "[3d Altitude Ft]": "Hoogte (ft)"},
+        color='vlucht',  
+        color_discrete_map=kleuren_map
     )
-)
-# Toon de grafiek in Streamlit
-st.plotly_chart(fig)
 
-# --------------------------------------------------
+    fig.update_yaxes(range=[0, 40000], dtick=5000)
+
+    # Interactieve legenda
+    fig.update_layout(
+        legend_title_text="Vlucht",
+        legend=dict(
+            itemclick="toggleothers",
+            itemdoubleclick="toggle"
+        )
+    )
+    # Toon de grafiek in Streamlit
+    st.plotly_chart(fig)
+
+    # --------------------------------------------------
+
+    # Vluchtdata: afstand in km
+    vlucht_afstanden = {
+        'vlucht 1': 1323,
+        'vlucht 2': 1314,
+        'vlucht 3': 1339,
+        'vlucht 4': 1289,
+        'vlucht 5': 1292,
+        'vlucht 6': 1290,
+        'vlucht 7': 1281
+    }
+
+    # Parameters
+    emissiefactor = 0.115  # kg CO₂ per passagier per km
+    aantal_passagiers = 150
+
+    # Bereken de uitstoot per vlucht
+    uitstoot_data = {vlucht: afstand * emissiefactor * aantal_passagiers for vlucht, afstand in vlucht_afstanden.items()}
+
+    # Zet uitstootdata om naar een DataFrame
+    uitstoot_df = pd.DataFrame(list(uitstoot_data.items()), columns=['Vlucht', 'Uitstoot (kg CO₂)'])
+
+    # Maak een bar plot voor de uitstoot per vlucht
+    fig2 = px.bar(
+        uitstoot_df,
+        x='Vlucht',
+        y='Uitstoot (kg CO₂)',
+        title='Uitstoot per Vlucht',
+        labels={'Uitstoot (kg CO₂)': 'Uitstoot (kg CO₂)'},
+        text='Uitstoot (kg CO₂)',
+        color='Vlucht',  # Kleur de balken per vlucht
+    )
+
+    # Zorg voor een consistente layout
+    fig2.update_layout(showlegend=False)
+    fig2.update_yaxes(range=[0, uitstoot_df['Uitstoot (kg CO₂)'].max() + 200])
+
+    # Toon de grafieken naast elkaar
+    col1, col2 = st.columns(2)
+    with col1:
+        st.plotly_chart(fig)
+    with col2:
+        st.plotly_chart(fig2)
+
 
 
 
