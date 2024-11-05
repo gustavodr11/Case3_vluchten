@@ -46,16 +46,7 @@ if selected == 'Intro':
 
 # --------------------------------------------------------------------------
 
-# VLUCHTEN pagina
-elif selected == "Vluchten": 
-    st.title("Vluchten")
-    st.header("De zeven vluchten van AMS naar BCN")
-    st.subheader("    ")
-    # Controleer of er al een geselecteerde vlucht is opgeslagen in de sessie
-    if "selected_vlucht" not in st.session_state:
-        st.session_state.selected_vlucht = "vlucht 1"  # Standaard selecteren we de eerste vlucht
-
-    # Voeg vluchtgegevens toe voor afstand en duur
+# Voeg vluchtgegevens toe voor afstand en duur
     vlucht_info = {
         'vlucht 1': {'afstand': '1323 km', 'duur': '2.14 uur'},
         'vlucht 2': {'afstand': '1314 km', 'duur': '1.75 uur'},
@@ -65,6 +56,15 @@ elif selected == "Vluchten":
         'vlucht 6': {'afstand': '1290 km', 'duur': '1.74 uur'},
         'vlucht 7': {'afstand': '1281 km', 'duur': '1.81 uur'}
     }
+
+# VLUCHTEN pagina
+elif selected == "Vluchten": 
+    st.title("Vluchten")
+    st.header("De zeven vluchten van AMS naar BCN")
+    st.subheader("    ")
+    # Controleer of er al een geselecteerde vlucht is opgeslagen in de sessie
+    if "selected_vlucht" not in st.session_state:
+        st.session_state.selected_vlucht = "vlucht 1"  # Standaard selecteren we de eerste vlucht
 
     # Laad de 7 Excel-bestanden in een dictionary
     vluchten_data = {
