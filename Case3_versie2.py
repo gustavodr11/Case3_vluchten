@@ -48,8 +48,8 @@ if selected == 'Intro':
 
 # VLUCHTEN pagina
 elif selected == "Vluchten": 
-    st.title("Vluchten")
-    st.subheader("De zeven vluchten van AMS naar BCN")
+    st.markdown("<h1 style='text-align: center;'>Vluchten</h1>", unsafe_allow_html=True)
+    st.markdown("<h3 style='text-align: center;'>De zeven vluchten van AMS naar BCN</h3>", unsafe_allow_html=True)
     # Controleer of er al een geselecteerde vlucht is opgeslagen in de sessie
     if "selected_vlucht" not in st.session_state:
         st.session_state.selected_vlucht = "vlucht 1"  # Standaard selecteren we de eerste vlucht
