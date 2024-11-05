@@ -84,3 +84,4 @@ fig.update_layout(
 # Toon de plot in Streamlit
 st.plotly_chart(fig)
 
+st.markdown(summary_text)
