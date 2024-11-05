@@ -335,7 +335,7 @@ if selected == 'Luchthavens':
         )
 
         st.plotly_chart(fig)
-
+ 
     # Checkbox om de interactieve grafiek met maand-slider te tonen
     if st.checkbox("Toon interactieve grafiek per maand"):
         create_aircraft_monthly_plot()
