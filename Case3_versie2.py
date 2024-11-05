@@ -10,7 +10,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from datetime import datetime
 from folium.plugins import HeatMap
-
+ 
 st.set_page_config(page_title='Case 3 Vluchten (groep 3)', page_icon='✈️', layout='wide', initial_sidebar_state='expanded')
 
 # Sidebar
