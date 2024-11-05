@@ -182,13 +182,6 @@ fig = px.line(
     color_discrete_map=kleuren_map
 )
 
-# Hover-informatie verfijnen
-fig.update_traces(
-    mode="lines+markers", 
-    marker=dict(size=5),
-    hovertemplate="<b>Vlucht:</b> %{customdata[0]}<br><b>Tijd:</b> %{x:.2f} uur<br><b>Hoogte:</b> %{y:.0f} ft"
-)
-
 # Interactieve legenda
 fig.update_layout(
     legend_title_text="Vlucht",
@@ -197,16 +190,6 @@ fig.update_layout(
         itemdoubleclick="toggle"
     )
 )
-
-# Voeg een horizontale lijn toe op gemiddelde hoogte voor referentie
-fig.add_hline(
-    y=20000, 
-    line_dash="dash", 
-    line_color="gray", 
-    annotation_text="Gemiddelde Hoogte", 
-    annotation_position="bottom right"
-)
-
 # Toon de grafiek in Streamlit
 st.plotly_chart(fig)
 
