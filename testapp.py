@@ -1,50 +1,79 @@
-import streamlit as st
 import pandas as pd
-import plotly.express as px
-from datetime import datetime
+import statsmodels.api as sm
+import plotly.graph_objects as go
 
 df = pd.read_csv("DatasetLuchthaven_murged2.csv")
-luchthaven_frequentie = pd.read_csv("luchthaven_frequentie.csv")
-
-# Bereken het totale aantal vluchten per luchthaven per maand
-def calculate_flights_per_month(selected_month):
-    # Zorg ervoor dat de STD-kolom correct is geformatteerd als datetime
-    df['STD'] = pd.to_datetime(df['STD'], errors='coerce')
-    
-    # Filter de dataframe om alle vluchten binnen de geselecteerde maand op te nemen
-    month_data = df[(df['STD'].dt.month == selected_month.month) & (df['STD'].dt.year == selected_month.year)]
-    
-    # Bereken het aantal inkomende en vertrekkende vluchten per luchthaven
-    inbound_flights = month_data[month_data['LSV'] == 'L'].groupby('City').size().reset_index(name='Aantal_inbound')
-    outbound_flights = month_data[month_data['LSV'] == 'S'].groupby('City').size().reset_index(name='Aantal_outbound')
-    
-    # Voeg de inkomende en vertrekkende vluchten samen per luchthaven
-    airport_flights = pd.merge(inbound_flights, outbound_flights, on='City', how='outer').fillna(0)
-    airport_flights['Totaal_aantal_vluchten'] = airport_flights['Aantal_inbound'] + airport_flights['Aantal_outbound']
-
-    return airport_flights
-
-# Streamlit interface
-st.subheader("Aantal vluchten per luchthaven per maand")
-
-# Slider voor maandselectie
-selected_month = st.slider("Selecteer een maand:", 
-                           min_value=datetime(2019, 1, 1), 
-                           max_value=datetime(2020, 12, 31), 
-                           value=datetime(2019, 7, 1), 
-                           format="YYYY-MM")
-
-# Bereken het aantal vluchten voor de geselecteerde maand
-airport_flights = calculate_flights_per_month(selected_month)
-
-# Bar plot weergeven
-fig = px.bar(
-    airport_flights,
-    x='City',
-    y='Totaal_aantal_vluchten',
-    labels={'City': 'Luchthaven', 'Totaal_aantal_vluchten': 'Aantal Vluchten'},
-    color='Totaal_aantal_vluchten',
-    color_continuous_scale=px.colors.sequential.Viridis
+# Zorg ervoor dat de kolom 'STD' datetime objecten zijn en groepeer de data per maand en luchthaven
+df['STD'] = pd.to_datetime(df['STD'])
+df['Maand'] = df['STD'].dt.month
+# Groepeer per maand en luchthaven om de werkelijke data te verkrijgen
+df_grouped = df.groupby(['Maand', 'luchthaven']).agg(
+    aantal_vluchten=('FLT', 'count')
+).reset_index()
+# Unieke luchthavens ophalen
+luchthavens = df_grouped['luchthaven'].unique()
+# Maak de figuur aan met dropdown-opties
+fig = go.Figure()
+# Loop door elke luchthaven en train een SARIMA-model
+for luchthaven in luchthavens:
+    # Filter data per luchthaven
+    data_per_luchthaven = df_grouped[df_grouped['luchthaven'] == luchthaven].set_index('Maand')
+    # Pas een SARIMA-model toe om het aantal vluchten te voorspellen
+    model = sm.tsa.statespace.SARIMAX(data_per_luchthaven['aantal_vluchten'], 
+                                      order=(1, 1, 1),  # ARIMA parameters (p, d, q)
+                                      seasonal_order=(1, 1, 1, 12),  # SARIMA parameters (P, D, Q, s)
+                                      enforce_stationarity=False, 
+                                      enforce_invertibility=False)
+    results = model.fit(disp=False)
+    # Voorspellingen genereren voor het aantal maanden in de dataset
+    voorspellingen = results.predict(start=0, end=len(data_per_luchthaven) - 1)
+    data_per_luchthaven['voorspeld_aantal_vluchten'] = voorspellingen.values
+    # Werkelijke gegevens (blauwe lijnen)
+    fig.add_trace(go.Scatter(
+        x=data_per_luchthaven.index, 
+        y=data_per_luchthaven['aantal_vluchten'], 
+        mode='lines+markers', 
+        name=f'Werkelijk aantal vluchten ({luchthaven})',
+        line=dict(color='blue'),
+        visible=False,
+    ))
+    # Voorspelde gegevens (rode lijnen)
+    fig.add_trace(go.Scatter(
+        x=data_per_luchthaven.index, 
+        y=data_per_luchthaven['voorspeld_aantal_vluchten'], 
+        mode='lines+markers', 
+        name=f'Voorspeld aantal vluchten ({luchthaven})',
+        line=dict(color='red'),
+        visible=False,
+    ))
+# Dropdown menu-opties configureren
+dropdown_buttons = []
+for i, luchthaven in enumerate(luchthavens):
+    # Elke luchthaven wordt slechts één keer weergegeven als actief in de dropdown
+    visible_trace_indices = [False] * len(fig.data)
+    visible_trace_indices[i * 2: i * 2 + 2] = [True] * 2  # Toon alleen de twee sporen voor de geselecteerde luchthaven
+    dropdown_buttons.append(
+        dict(
+            label=str(luchthaven),  # Zorg ervoor dat label een string is
+            method="update",
+            args=[{"visible": visible_trace_indices},
+                  {"title": f"Voorspelling en werkelijke data voor {luchthaven}"}],
+        )
+    )
+# Voeg dropdown toe aan layout
+fig.update_layout(
+    updatemenus=[dict(
+        active=0,
+        buttons=dropdown_buttons,
+        x=1,
+        y=1.15,
+    )],
+    title="Maandelijkse voorspelling en werkelijke gegevens per luchthaven",
+    xaxis_title="Maand",
+    yaxis_title="Aantal vluchten",
+    height=600,
 )
-
-st.plotly_chart(fig)
+# Begin met de eerste luchthaven zichtbaar
+fig.data[0].visible = True
+fig.data[1].visible = True
+fig.show()
