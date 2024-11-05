@@ -63,7 +63,13 @@ fig.update_layout(
     title=f"Voorspelling en werkelijke gegevens voor {selected_luchthaven}",
     xaxis_title="Maand",
     yaxis_title="Aantal vluchten",
+    height=600
     height=600,
+    xaxis=dict(
+        tickmode='array',
+        tickvals=list(range(1, 13)),  # Maandnummers van 1 tot 12
+        ticktext=[str(i) for i in range(1, 13)],  # Weergeven als 1, 2, ..., 12
+    )
 )
 
 # Toon de plot in Streamlit
