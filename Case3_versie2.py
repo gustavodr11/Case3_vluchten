@@ -205,7 +205,29 @@ elif selected == "Vluchten":
 
 # --------------------------------------------------------------------------
 if selected == 'Luchthavens':
-  st.title("Luchthavens")
+  st.title("Luchthavens") 
+
+    # Maak drie kolommen voor de metrics
+    col1, col2, col3 = st.columns(3)
+    
+    # Fictieve percentages
+    te_vroeg_percentage = 15  # Fictief percentage voor "Te vroeg"
+    op_tijd_percentage = 70   # Fictief percentage voor "Op tijd"
+    te_laat_percentage = 15   # Fictief percentage voor "Te laat"
+    
+    # Metrics met kleurcodes voor de waarden
+    with col1:
+        st.markdown(f"<h2 style='color: blue;'>Te vroeg</h2>", unsafe_allow_html=True)
+        st.metric(label="", value=f"{te_vroeg_percentage}%")
+    
+    with col2:
+        st.markdown(f"<h2 style='color: green;'>Op tijd</h2>", unsafe_allow_html=True)
+        st.metric(label="", value=f"{op_tijd_percentage}%")
+    
+    with col3:
+        st.markdown(f"<h2 style='color: red;'>Te laat</h2>", unsafe_allow_html=True)
+        st.metric(label="", value=f"{te_laat_percentage}%")
+   
 
 
 
