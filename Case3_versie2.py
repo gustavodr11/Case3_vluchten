@@ -83,7 +83,7 @@ elif selected == "Vluchten":
     # Haal de geselecteerde dataframe op uit sessiestatus
     selected_vlucht = st.session_state.selected_vlucht
     df1 = vluchten_data[selected_vlucht]
-    afstand = vlucht_info[selected_vlucht]['afstand']
+    afstand = int(vlucht_info[selected_vlucht]['afstand']) 
     duur = vlucht_info[selected_vlucht]['duur']
     uitstoot = afstand * emissiefactor * aantal_passagiers
 
