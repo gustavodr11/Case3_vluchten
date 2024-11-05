@@ -270,34 +270,26 @@ if selected == 'Luchthavens':
 
 # -------------------------------------------------------------------
 
-    # Bereken het aantal vliegtuigen op elke luchthaven per maand
-    def calculate_aircraft_on_airport(selected_month):
+    # Bereken het totale aantal vluchten per luchthaven per maand
+    def calculate_flights_per_month(selected_month):
         # Zorg ervoor dat de STD-kolom correct is geformatteerd als datetime
         df['STD'] = pd.to_datetime(df['STD'], errors='coerce')
     
-        # Controleer of selected_month een pd.Timestamp object is
-        if not isinstance(selected_month, pd.Timestamp):
-            selected_month = pd.to_datetime(selected_month)
+        # Filter de dataframe om alle vluchten binnen de geselecteerde maand op te nemen
+        month_data = df[(df['STD'].dt.month == selected_month.month) & (df['STD'].dt.year == selected_month.year)]
     
-        # Filter de dataframe op basis van de maand
-        landed = df[(df['LSV'] == 'L') & (df['STD'].notna()) & (df['STD'].dt.to_period("M") == selected_month.to_period("M"))]
-        departed = df[(df['LSV'] == 'S') & (df['STD'].notna()) & (df['STD'].dt.to_period("M") == selected_month.to_period("M"))]
+        # Bereken het aantal inkomende en vertrekkende vluchten per luchthaven
+        inbound_flights = month_data[month_data['LSV'] == 'L'].groupby('City').size().reset_index(name='Aantal_inbound')
+        outbound_flights = month_data[month_data['LSV'] == 'S'].groupby('City').size().reset_index(name='Aantal_outbound')
     
-        # Tel het aantal vliegtuigen per luchthaven
-        landed_count = landed.groupby('City')['TAR'].nunique().reset_index(name='Aantal_vliegtuigen')
-        departed_count = departed.groupby('City')['TAR'].nunique().reset_index(name='Aantal_vertrokken')
+        # Voeg de inkomende en vertrekkende vluchten samen per luchthaven
+        airport_flights = pd.merge(inbound_flights, outbound_flights, on='City', how='outer').fillna(0)
+        airport_flights['Totaal_aantal_vluchten'] = airport_flights['Aantal_inbound'] + airport_flights['Aantal_outbound']
 
-        # Bereken het aantal vliegtuigen dat nog op de luchthaven is
-        airport_traffic = pd.merge(landed_count, departed_count, on='City', how='left').fillna(0)
-        airport_traffic['Aantal_vliegtuigen'] = airport_traffic['Aantal_vliegtuigen'] - airport_traffic['Aantal_vertrokken']
-
-        return airport_traffic
-
-
-    
+        return airport_flights
 
     # Streamlit interface
-    st.subheader("Drukte op luchthavens in de tijd")
+    st.subheader("Aantal vluchten per luchthaven per maand")
 
     # Slider voor maandselectie
     selected_month = st.slider("Selecteer een maand:", 
@@ -306,43 +298,20 @@ if selected == 'Luchthavens':
                                value=datetime(2019, 7, 1), 
                                format="YYYY-MM")
 
-    # Bereken het aantal vliegtuigen voor de geselecteerde maand
-    airport_traffic = calculate_aircraft_on_airport(selected_month)
+    # Bereken het aantal vluchten voor de geselecteerde maand
+    airport_flights = calculate_flights_per_month(selected_month)
 
     # Bar plot weergeven
     fig = px.bar(
-        airport_traffic,
+        airport_flights,
         x='City',
-        y='Aantal_vliegtuigen',
-        labels={'City': 'Luchthaven', 'Aantal_vliegtuigen': 'Aantal Vliegtuigen'},
-        color='Aantal_vliegtuigen',
+        y='Totaal_aantal_vluchten',
+        labels={'City': 'Luchthaven', 'Totaal_aantal_vluchten': 'Aantal Vluchten'},
+        color='Totaal_aantal_vluchten',
         color_continuous_scale=px.colors.sequential.Viridis
     )
 
     st.plotly_chart(fig)
-
-    # Interactieve grafiek per maand met Streamlit slider
-    def create_aircraft_monthly_plot():
-        months = pd.date_range(start='2019-01-01', end='2020-12-31', freq='MS')
-
-        # Streamlit slider voor maandselectie
-        selected_month_index = st.slider("Kies een maand voor de tijdgrafiek", 0, len(months) - 1, 0, format="%b %Y")
-        selected_month = months[selected_month_index]
-
-        # Bereken het aantal vliegtuigen voor de geselecteerde maand
-        airport_traffic = calculate_aircraft_on_airport(selected_month)
-
-        # Maak de bar plot voor de geselecteerde maand
-        fig = px.bar(
-            airport_traffic,
-            x='City',
-            y='Aantal_vliegtuigen',
-            labels={'City': 'Luchthaven', 'Aantal_vliegtuigen': 'Aantal Vliegtuigen'},
-            color='Aantal_vliegtuigen',
-            color_continuous_scale=px.colors.sequential.Viridis
-        )
-
-        st.plotly_chart(fig)
  
    
 
