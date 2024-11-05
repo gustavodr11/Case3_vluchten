@@ -212,7 +212,7 @@ if selected == 'Luchthavens':
     
     # Fictieve percentages
     te_vroeg_percentage = 15  # Fictief percentage voor "Te vroeg"
-    op_tijd_percentage = 70   # Fictief percentage voor "Op tijd"
+    op_tijd_percentage = 70   # Fictief percentage voor "Op tijd" 
     te_laat_percentage = 15   # Fictief percentage voor "Te laat"
     
     # Metrics met kleurcodes voor de waarden
