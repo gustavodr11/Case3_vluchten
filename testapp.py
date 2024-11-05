@@ -1,13 +1,14 @@
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
-from statsmodels.tsa.holtwinters import ExponentialSmoothing
+from sklearn.linear_model import LinearRegression
+import numpy as np
 
 # Laad de dataset
 df = pd.read_csv("DatasetLuchthaven_murged2.csv")
 df.drop(['Unnamed: 0'], axis=1, inplace=True)
 
-# Zorg ervoor dat de kolom 'STD' datetime objecten zijn en groepeer de data per maand en luchthaven
+# Zorg ervoor dat de kolom 'STD' datetime objecten zijn en voeg de maand toe
 df['STD'] = pd.to_datetime(df['STD'])
 df['Maand'] = df['STD'].dt.month
 
@@ -23,25 +24,25 @@ luchthavens = df_grouped['luchthaven'].unique()
 selected_luchthaven = st.selectbox("Selecteer een luchthaven", luchthavens)
 
 # Filter de data per geselecteerde luchthaven
-data_per_luchthaven = df_grouped[df_grouped['luchthaven'] == selected_luchthaven].set_index('Maand')
+data_per_luchthaven = df_grouped[df_grouped['luchthaven'] == selected_luchthaven]
 
-# Pas een Holt-Winters model toe om het aantal vluchten te voorspellen
-model = ExponentialSmoothing(
-    data_per_luchthaven['aantal_vluchten'], 
-    seasonal='add', 
-    seasonal_periods=12
-)
-fit = model.fit()
+# Voorbereiding voor lineaire regressie: de maand als input en aantal vluchten als output
+X = data_per_luchthaven['Maand'].values.reshape(-1, 1)
+y = data_per_luchthaven['aantal_vluchten']
 
-# Voorspellingen genereren voor het aantal maanden in de dataset
-data_per_luchthaven['voorspeld_aantal_vluchten'] = fit.fittedvalues
+# Pas lineaire regressie toe
+model = LinearRegression()
+model.fit(X, y)
+
+# Voorspellingen genereren
+data_per_luchthaven['voorspeld_aantal_vluchten'] = model.predict(X)
 
 # Maak de plot voor werkelijke en voorspelde gegevens
 fig = go.Figure()
 
 # Werkelijke gegevens (blauwe lijnen)
 fig.add_trace(go.Scatter(
-    x=data_per_luchthaven.index, 
+    x=data_per_luchthaven['Maand'], 
     y=data_per_luchthaven['aantal_vluchten'], 
     mode='lines+markers', 
     name=f'Werkelijk aantal vluchten ({selected_luchthaven})',
@@ -50,7 +51,7 @@ fig.add_trace(go.Scatter(
 
 # Voorspelde gegevens (rode lijnen)
 fig.add_trace(go.Scatter(
-    x=data_per_luchthaven.index, 
+    x=data_per_luchthaven['Maand'], 
     y=data_per_luchthaven['voorspeld_aantal_vluchten'], 
     mode='lines+markers', 
     name=f'Voorspeld aantal vluchten ({selected_luchthaven})',
