@@ -37,6 +37,12 @@ model.fit(X, y)
 # Voorspellingen genereren
 data_per_luchthaven['voorspeld_aantal_vluchten'] = model.predict(X)
 
+# Print modelresultaten in Streamlit
+st.write("### Resultaten van Lineaire Regressie")
+st.write(f"Intercept (snijpunt met de y-as): {model.intercept_:.2f}")
+st.write(f"Maandcoëfficiënt: {model.coef_[0]:.2f}")
+st.write(f"R²-score: {model.score(X, y):.2f}")
+
 # Maak de plot voor werkelijke en voorspelde gegevens
 fig = go.Figure()
 
@@ -73,3 +79,4 @@ fig.update_layout(
 
 # Toon de plot in Streamlit
 st.plotly_chart(fig)
+
