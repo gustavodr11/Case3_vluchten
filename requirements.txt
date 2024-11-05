@@ -9,3 +9,4 @@ openpyxl
 scikit-learn
 statsmodels
 matplotlib
+seaborn
