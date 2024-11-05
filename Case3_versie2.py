@@ -217,8 +217,7 @@ if selected == 'Luchthavens':
     
     # Toon de metrics
     with col1:
-        st.markdown("<h3 style='color: blue;'>Te vroeg</h3>", unsafe_allow_html=True)
-        st.metric(label="", value=f"{te_vroeg_percentage}%")
+        st.metric(label="Rome", value=f"{te_vroeg_percentage}%", delta="Te vroeg")
     with col2:
         st.metric(label="Op tijd", value=f"{op_tijd_percentage}%", delta="0%", delta_color="normal")  # Groen
     with col3:
