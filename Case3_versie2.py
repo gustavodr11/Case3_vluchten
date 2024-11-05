@@ -182,6 +182,8 @@ fig = px.line(
     color_discrete_map=kleuren_map
 )
 
+fig.update_traces(mode="lines+markers", marker=dict(size=5))
+
 # Interactieve legenda
 fig.update_layout(
     legend_title_text="Vlucht",
