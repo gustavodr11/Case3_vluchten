@@ -38,8 +38,8 @@ with st.sidebar:
 if selected == 'Intro':
     st.title("Case 3 Vluchten `versie 2` - Gustavo & Stievy")
     st.write("""
-        (Voor deze VA-opdracht hebben we het dashboard van Casus 3 Vluchten verbeterd. 
-        We hebben verschillende elementen aangepast om er meer een dashboard van te maken en het geheel compacter te maken dan de vorige versie.)
+        Voor deze VA-opdracht hebben we het dashboard van Casus 3 Vluchten verbeterd. 
+        We hebben verschillende elementen aangepast om er meer een dashboard van te maken en het geheel compacter te maken dan de vorige versie.
     """)
     st.write("#### Gebruikte Bronnen:")
     st.write("""
