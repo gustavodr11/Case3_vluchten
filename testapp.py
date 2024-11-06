@@ -21,6 +21,8 @@ df_grouped = df.groupby(['Maand', 'luchthaven']).agg(
 # Unieke luchthavens ophalen
 luchthavens = df_grouped['luchthaven'].unique()
 
+st.write("#### Model")
+
 # Maak een dropdown menu in Streamlit voor de luchthaven selectie
 selected_luchthaven = st.selectbox("Selecteer een luchthaven", luchthavens)
 
@@ -43,7 +45,7 @@ r2 = r2_score(y, data_per_luchthaven['voorspeld_aantal_vluchten'])
 mae = mean_absolute_error(y, data_per_luchthaven['voorspeld_aantal_vluchten'])
 
 # Print modelresultaten in Streamlit
-st.write("#### Resultaten van Random Forest Regressie")
+st.write("##### Resultaten van Random Forest Regressie")
 st.write(f"R²-score: {r2:.2f}")
 st.write(f"Mean Absolute Error (MAE): {mae:.2f}")
 
