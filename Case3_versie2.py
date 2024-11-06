@@ -46,6 +46,7 @@ if selected == 'Intro':
         - [Streamlit documentatie](https://docs.streamlit.io/)
         - [Uitstoot data](https://ecotree.green/nl/calculate-flight-co2#result)
         - [Max. aantal passagiers (KLM - Boeing 737)](https://www.klm.nl/information/travel-class-extra-options/aircraft-types/boeing-737-800)
+        - [Random Forest Regression Explained](https://medium.com/@theclickreader/random-forest-regression-explained-with-implementation-in-python-3dad88caf165)
     """)
 
 # --------------------------------------------------------------------------
