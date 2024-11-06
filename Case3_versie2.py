@@ -10,7 +10,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from datetime import datetime
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import r2_score, mean_absolute_error
+from sklearn.metrics import r2_score, mean_squared_error
   
 st.set_page_config(page_title='Case 3 Vluchten (groep 3)', page_icon='✈️', layout='wide', initial_sidebar_state='expanded')
 
@@ -314,7 +314,8 @@ if selected == 'Luchthavens':
 
     st.plotly_chart(fig)
  
-
+    # --------------------------------------------------------------
+  
     # Zorg ervoor dat de kolom 'STD' datetime objecten zijn en voeg de maand toe
     df['STD'] = pd.to_datetime(df['STD'])
     df['Maand'] = df['STD'].dt.month
@@ -348,12 +349,12 @@ if selected == 'Luchthavens':
 
     # Bereken evaluatiemaatstaven
     r2 = r2_score(y, data_per_luchthaven['voorspeld_aantal_vluchten'])
-    mae = mean_absolute_error(y, data_per_luchthaven['voorspeld_aantal_vluchten'])
+    rmse = np.sqrt(mean_squared_error(y, data_per_luchthaven['voorspeld_aantal_vluchten']))
 
     # Print modelresultaten in Streamlit
     st.write("##### Resultaten van Random Forest Regressie")
     st.write(f"R²-score: {r2:.2f}")
-    st.write(f"Mean Absolute Error (MAE): {mae:.2f}")
+    st.write(f"Root Mean Squared Error (RMSE): {rmse:.2f}")
 
     # Maak de plot voor werkelijke en voorspelde gegevens
     fig = go.Figure()
