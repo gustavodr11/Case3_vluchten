@@ -36,7 +36,7 @@ with st.sidebar:
 
 # INTRO pagina
 if selected == 'Intro':
-    st.title("Case 3 Vluchten - Groep 3")
+    st.title("Case 3 Vluchten `versie 2` - Gustavo & Stievy")
     st.write("""
         (uitleg...)
     """)
