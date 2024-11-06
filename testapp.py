@@ -2,7 +2,7 @@ import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
+from sklearn.metrics import r2_score, mean_squared_error
 import numpy as np
 
 # Laad de dataset
@@ -42,13 +42,11 @@ data_per_luchthaven['voorspeld_aantal_vluchten'] = model.predict(X)
 
 # Bereken evaluatiemaatstaven
 r2 = r2_score(y, data_per_luchthaven['voorspeld_aantal_vluchten'])
-mae = mean_absolute_error(y, data_per_luchthaven['voorspeld_aantal_vluchten'])
 rmse = np.sqrt(mean_squared_error(y, data_per_luchthaven['voorspeld_aantal_vluchten']))
 
 # Print modelresultaten in Streamlit
 st.write("##### Resultaten van Random Forest Regressie")
 st.write(f"R²-score: {r2:.2f}")
-st.write(f"Mean Absolute Error (MAE): {mae:.2f}")
 st.write(f"Root Mean Squared Error (RMSE): {rmse:.2f}")
 
 # Maak de plot voor werkelijke en voorspelde gegevens
